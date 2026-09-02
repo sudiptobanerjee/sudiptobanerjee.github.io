@@ -1,0 +1,29 @@
+---
+title: "Research"
+toc: false
+listing:
+- id: research
+  contents:
+    - research/multivariate
+    - research/spatial-survival
+    - research/spatial-gradients
+    - research/spatial-massive
+    - research/disease-mapping
+    - research/mechanistic
+    - research/case-studies
+    - research/computing
+  sort: false
+  type: grid
+  grid-columns: 4
+  image-height: 250px
+  fields: [image, title, description]
+  page-size: 25
+  categories: false
+  sort-ui: false
+  filter-ui: false
+  feed: false
+
+page-layout: full
+page-navigation: true
+title-block-banner: false
+---

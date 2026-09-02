@@ -1,0 +1,48 @@
+
+*See <a href="https://scholar.google.com/citations?user=MgLH0kUAAAAJ&hl=en">Google Scholar</a>, <a href=https://orcid.org/0000-0002-2239-208X>ORCID</a> or [CV](/files/Banerjee_CV.pdf) for a complete list of peer-reviewed publications.*
+
+## Featured publications over the last 5 years
+Presicce, L. and Banerjee, S. *(in press)*. Bayesian transfer learning for artificially intelligent geospatial systems: A predictive stacking approach. *Journal of Machine Learning Research*. [arxiv](https://doi.org/10.48550/arXiv.2410.09504)
+
+Halder, A., Li, D. and Banerjee, S. *(in press)*. Bayesian spatiotemporal wombling. *Journal of the American Statistical Association*. [arxiv](https://doi.org/10.48550/arXiv.2407.17804) and [DOI](https://doi.org/10.1080/01621459.2026.2700798)
+
+Pan, S., Zhang, L., Bradley, J.R. and Banerjee, S. *(in press)*. Bayesian inference for spatial-temporal non-Gaussian data using predictive stacking. *Bayesian Analysis*. [arxiv](https://arxiv.org/abs/2406.04655) and [DOI](https://doi.org/10.1214/25-BA1582) 
+
+Peruzzi, M., Banerjee, S., Dunson, D.B. and Finley, A.O. *(in press)*. Gridding and parameter expansion for scalable latent Gaussian models of spatial multivariate data. *Bayesian Analysis*. <a href="https://arxiv.org/abs/2101.03579">arxiv</a> and <a href="https://doi.org/10.1214/25-BA1515">DOI</a>
+
+Zhang, L., Tang, W. and Banerjee, S. (2026). Bayesian geostatistics using predictive stacking. *Journal of the American Statistical Association*, 121, 1549–1561. <a href="https://arxiv.org/abs/2304.12414">arxiv</a> and <a href="https://doi.org/10.1080/01621459.2025.2566449">DOI</a>.
+
+Wu, K. and Banerjee, S. (2026). Spatial confounding in multivariate areal data analysis. *Biometrics*, 82(3), ujag143. [arxiv](https://doi.org/10.48550/arXiv.2505.07232) and [DOI](https://doi.org/10.1093/biomtc/ujag143)
+
+Coube-Sisqueille, S., Banerjee, S. and Liquet, B. (2026). Nonstationary spatial process models with spatially varying covariance kernels. *Journal of Computational and Graphical Statistics*, 35, 173-183. <a href="https://arxiv.org/abs/2203.11873">arxiv</a> and <a href="https://doi.org/10.1080/10618600.2025.2516020">DOI</a>
+
+Wu, K. and Banerjee, S. (2025). Assessing spatial disparities: A Bayesian linear regression approach, *Biostatistics*, 26, kxaf048, [arxiv](https://arxiv.org/abs/2407.19171) and [DOI](https://doi.org/10.1093/biostatistics/kxaf048)
+
+Banerjee, S., Chen, X., Frankenburg, I. and Zhou, D. (2025). Dynamic Bayesian learning for spatiotemporal mechanistic models. *Journal of Machine Learning Research*, 26(146), 1–43. <a href="https://arxiv.org/abs/2208.06528">arxiv</a> and <a href="http://jmlr.org/papers/v26/22-0896.html">URL</a> 
+
+Guhaniyogi, R., Baracaldo, L. and Banerjee, S. (2025). Bayesian data sketching for varying coefficient regression models. *Journal of Machine Learning Research*, 26(98), 1–29. <a href="https://arxiv.org/pdf/2506.00270">arxiv</a> and <a href=http://jmlr.org/papers/v26/23-0505.html>URL</a>
+
+Dey, D., Banerjee, S., Lindquist, M.A. and Datta, A. (2025). Graph-constrained analysis for multivariate functional data. *Journal of Multivariate Analysis*, 207, 105428. <a href="https://arxiv.org/abs/2209.06294">arxiv</a> and <a href="https://doi.org/10.1016/j.jmva.2025.105428">DOI</a>.
+
+Li, D., Jones, A., Banerjee, S. and Engelhardt, B. (2025). Bayesian multi-group Gaussian process models for heterogeneous group-structured data. *Journal of Machine Learning Research*, 26(30), 1--34. <a href="https://arxiv.org/abs/2110.08411">arxiv</a> and <a href="https://www.jmlr.org/papers/v26/23-0291.html">URL</a>
+
+Halder, A., Banerjee, S. and Dey, D.K. (2024). Bayesian modeling with spatial curvature processes. *Journal of the American Statistical Association*, 119, 1155--1167. <a href="https://arxiv.org/abs/2302.05320">arxiv</a> and <a href="https://doi.org/10.1080/01621459.2023.2177166">DOI</a>.
+
+Banerjee, S. (2024). Finite population survey sampling: An unapologetic Bayesian perspective. *Sankhya A*, 86, 95--124. <a href="https://arxiv.org/abs/2306.10635">arxiv</a> and <a href="https://doi.org/10.1007/s13171-024-00348-8">DOI</a>.
+
+Li, D., Tang, W. and Banerjee, S. (2023). Inference for Gaussian processes with Matern covariogram on compact Riemannian manifolds. *Journal of Machine Learning Research*, 24(101), 1--26. <a href="https://arxiv.org/abs/2104.03529">arxiv</a> and <a href="https://jmlr.org/papers/v24/22-0503.html">URL</a>.
+
+Alaimo Di Loro, P., Mingione, M., Lipsitt, J., Batteate, C.M., Jerrett, M.B. and Banerjee, S. (2023). Bayesian hierarchical modeling and analysis for physical activity trajectories using wearable devices data. *Annals of Applied Statistics*, 17, 2865--2886. <a href="https://arxiv.org/abs/2101.01624">arxiv</a> and <a href="https://doi.org/10.1214/23-AOAS1742">DOI</a>.
+
+Gao, L., Banerjee, S. and Ritz, B. (2023). Spatial difference boundary detection for multiple outcomes using Bayesian disease mapping. *Biostatistics*, 24, 922--944. <a href="https://arxiv.org/pdf/2205.00318">arxiv</a> and <a  href="https://doi.org/10.1093/biostatistics/kxac013">DOI</a>.
+
+Dey, D., Datta, A. and Banerjee, S. (2022). Graphical Gaussian process models for highly multivariate spatial data. *Biometrika*, 109, 993--1014. <a href=https://arxiv.org/abs/2009.04837>arxiv</a> and <a href="https://doi.org/10.1093/biomet/asab061">DOI</a>.
+
+Banerjee, S. (2022). Discussion of "Measuring housing vitality from multi-source big data and machine learning”. *Journal of the American Statistical Association*, 117, 1063–1065. <a href="https://doi.org/10.1080/01621459.2022.2098135">DOI</a>.
+
+Peruzzi, M., Banerjee, S. and Finley, A.O. (2022). Highly scalable Bayesian geostatistical modeling via meshed Gaussian Processes on partitioned domains. *Journal of the American Statistical Association*, 117, 969--982. <a href="https://arxiv.org/abs/2003.11208">arxiv</a> and <a href="https://doi.org/10.1080/01621459.2020.1833889">DOI</a>.
+
+Zhang, L. and Banerjee, S. (2022). Spatial factor modeling: A Bayesian Matrix-Normal approach for misaligned data. *Biometrics*, 78, 560--573. <a href="https://arxiv.org/abs/2006.00595">arxiv</a> and <a href="https://doi.org/10.1111/biom.13452">DOI</a>.
+
+Tang, W., Zhang, L. and Banerjee, S. (2021). On identifiability and consistency of the nugget in Gaussian spatial process models. *Journal of the Royal Statistical Society: Series B (Methodology)*, 83, 1044--1070. <a href=https://arxiv.org/abs/1908.05726>arxiv</a> and <a href="https://doi.org/10.1111/rssb.12472">DOI</a>.
+

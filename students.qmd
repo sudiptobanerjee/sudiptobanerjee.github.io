@@ -1,0 +1,52 @@
+---
+title: "Students and Postdocs"
+title-block-banner: false
+---
+
+<!-- [Mathematical Genealogy Project](https://www.mathgenealogy.org/id.php?id=64531&fChrono=1) -->
+
+::: {.columns}
+
+::: {.column width="50%"}
+
+### PhD students
+
+- Joaquim Texeira
+- Xiang Chen
+- Valentina Aruputhusamy
+- Daniel Zhou
+- [Soumyakanti Pan](https://span-18.github.io/) (2025)
+- Jane Pan (2022)
+- [Ian Frankenburg](https://ian-frankenburg.com/) (2022)
+- [Leiwen Gao](https://scholar.google.com/citations?user=KqbjuCEAAAAJ&hl=en) (2021)
+- Bingling Wang (2021)
+- [Lu Zhang](https://luzhangstat.github.io/) (2020)
+- [Alec Chan-Golston](https://publichealth.ucmerced.edu/content/alec-chan-golston) (2020)
+- Nada A. Abdalla (2018)
+- [Caroline Groth](https://directory.hsc.wvu.edu/Profile/61287) (2017)
+- [Abhirup Datta](https://abhidatta.com/) (2016)
+- [Harrison Quick](https://sites.google.com/site/harryq/) (2013)
+- Joao Monteiro (2012)
+- [Rajarshi Guhaniyogi](https://sites.google.com/view/rajguhaniyogi/) (2012)
+- Qian Ren (2012)
+- Pei Li (2011)
+- [Andrew O. Finley](https://www.finley-lab.com/) (2006)
+- Freda W. Cooner (2006)
+
+:::
+
+::: {.column width="50%"}
+
+### Postdocs/Visiting Scholars
+
+- [Didong Li](https://sites.google.com/view/didongli/) (2020-2022)
+- Pierfrancesco Alaimo di Loro (2019-2020)
+- Marco Mignone (2019-2020)
+- [Michele Peruzzi](https://mkln.it/page/2/) (2018-2020)
+- [Wenpin Tang](https://www.columbia.edu/~wt2319/) (2018-2019)
+- [Shinichiro Shirota](https://sites.google.com/site/shinichiroshirota/home) (2017–2019)
+
+:::
+
+:::
+

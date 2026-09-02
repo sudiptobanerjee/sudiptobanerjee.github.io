@@ -1,0 +1,49 @@
+<!-- ---
+title: "Keynote or Plenary Lectures and Webinars"
+description-meta: "Keynote or Plenary Lectures and Webinars"
+title-block-banner: false
+--- -->
+
+## Keynote or Plenary Lectures
+
+- Pitt Biostatistics Research Day, Pittsburgh, PA, March, 2025. **Keynote.**
+
+- The 2024 IISA (International Indian Statistical Association) Meeting, Cochin, India, December, 2024. **Plenary.**
+
+- STATISTISCHE WOCHE (Statistics Week) 2023. Dortmund, Germany, September, 2023. **Plenary.**
+
+- GEOMED 2022. Irvine, CA, October, 2022. **Plenary.**
+
+- Japanese Joint Statistical Meetings. Kanagawa, Japan, September, 2021. **Plenary.**
+
+- Joint Statistical Meetings. Seattle, WA, August, 2021. **ASA President’s Invited Introductory Overview Lecture.**
+
+- Interdisciplinary Research in Technology and Management. Kolkata, India, February, 2021. **Keynote.**
+
+- Advancing knowledge about spatial modeling, infectious diseases, environment and health. The Fields Institute for Research in Mathematical Sciences, Toronto, Canada, June, 2020. **Keynote.**
+
+- Bayes on the Beach. Gold Coast, Australia, November, 2019. **Keynote.**
+
+- Data Science of the Natural Environment (DSNE) Conference. Lancaster University, Lancaster UK, July, 2019. **Keynote.**
+
+- Bayesian Statistics in the Big Data Era. Centre International de Rencontres Mathématiques (CIRM), Marseilles, France, November, 2018. **Keynote.** <br>
+<span style="font-size:15px;">High-Dimensional Bayesian Geostatistics (On Your Laptop) &rarr; <a href="https://www.youtube.com/watch?v=eh_h0OkP4g8" target="_blank">YouTube Video</a></span>
+
+- CMStatistics 2017: International Conference on Computational and Methological Statistics. London, UK, December 2017.
+**Special Invited.**
+
+- EcoSta 2017: International Conference on Econometrics and Statistics. Hong Kong, June, 2017. **Special Invited.**
+
+- Climate Informatics Annual Workshop, National Center for Atmospheric Research, September 2016. **Keynote.**
+
+- Fifteenth Annual Red Raider Mini Symposium: Spatial Inference on Manifolds Spatial Statistics, Statistics on Manifolds, Differential Geometry, and Computational Science. Texas Tech University, Lubbock, TX, November, 2015. **Keynote.**
+
+- Annual IMS/WNAR Meeting, Boise, Idaho, June 2015. **Presidential Invited Keynote Address.**
+
+- International Society for Bayesian Analysis (ISBA) World Meeting. Sardinia, Italy, June, 2016. **Keynote.**
+
+- The International Environmetrics Society TIES-GRASPA Annual Conference. Bergamo, Italy, July, 2017. **Keynote.**
+
+- The 2014 IISA (International Indian Statistical Association) Meeting, Riverside, CA, July 2014. **Special Invited.**
+
+- Spatial Statistics 2013: Revealing intricacies in spatial and spatial-temporal data with statistics. Columbus, OH, June, 2013. **Plenary.**

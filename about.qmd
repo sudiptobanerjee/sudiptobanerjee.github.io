@@ -1,0 +1,25 @@
+## Biography
+
+Dr. Sudipto Banerjee currently serves as Senior Associate Dean in the [Fielding School of Public Health](https://ph.ucla.edu/). He is a Professor in the [UCLA Department of Biostatistics](https://ph.ucla.edu/departments/biostatistics) with a joint appointment in the [UCLA Department of Statistics and Data Science](https://statistics.ucla.edu/) and an affiliate appointment in the [UCLA Institute of the Environment and Sustainability](https://www.ioes.ucla.edu/). He served as the Chair of the Department of Biostatistics at UCLA from 2014 through 2023. He served as the elected President of the International Society for Bayesian Analysis in 2022.
+
+His research interests include Bayesian hierarchical modeling and statistical machine learnin methods for complex data systems involving massive datasets ("BIG DATA"); environmental processes and their impact on public health; spatial data science; spatial epidemiology; stochastic process models; statistical learning from physical and mechanistic systems; survey sampling and survival analysis. His theoretical and methodological contributions in statistics are available in the form of several scholarly publications in peer-reviewed journals in statistics, biostatistics and health sciences; an authoritative textbook on spatial statistics; a textbook on linear algebra for statisticians; an edited comprehensive handbook on spatial epidemiology; and two committee reports for the National Research Council of the National Academies. He has served as Principal Investigator of over 14 major federally funded research projects from NIH and NSF primarily devoted to the advancement of statistical and machine learning methods for space-time processes and their substantive impact in data-driven scientific discoveries.
+
+
+## Honors and Awards
+
+- 2005, Inductee: Pi Chapter of Delta Omega National Honor Society.
+- 2009, Abdel El Sharaawi Young Researcher Award from The International Environmetrics Society.
+- 2010, Elected member, International Statistical Institute.
+- 2011, Mortimer Spiegelman Award from the Statistics Section of the American Public Health Association.
+- 2012, Elected Fellow of the American Statistical Association (ASA).
+- 2012, International Indian Statistical Association's Young Researcher Award.
+- 2015, Presidential Invited Address, Western North American Regional (WNAR) Meeting of the International Biometric Society.
+- 2015, Elected Fellow of the Institute of Mathematical Statistics (IMS).
+- 2015, Distinguished Achievement Medal from ASA Section on Statistics and the Environment.
+- 2017, ASA Outstanding Application Award.
+- 2018, Elected Fellow of the International Society for Bayesian Analysis (ISBA).
+- 2019, George W. Snedecor Award from the Committee of Presidents of Statistical Societies (COPSS).
+- 2020, Elected Fellow of the American Association for the Advancement of Science (AAAS).
+- 2022, President of the International Society for Bayesian Analysis.
+- 2024, Jerome Sacks Award for Outstanding Cross-Disciplinary Research.
+- 2027, Medallion Award and Lecture from the Institute of Mathematical Statistics (IMS).  

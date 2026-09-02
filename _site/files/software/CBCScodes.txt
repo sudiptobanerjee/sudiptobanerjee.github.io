@@ -1,0 +1,811 @@
+################
+#  Model 1(a)  #
+################
+# N ~ POI(theta)
+
+######################
+#  First Activation  #
+######################
+
+model 
+{
+
+	c <- 100000
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]  # Regression on eta
+		s[i] <- exp(-exp(xb[i])*pow(y[i], rho))  # Weibull survival function
+		L1[i] <- -theta*(1-s[i])  # Loglikelihood part 1 = log(S*(t))
+		L2[i] <- (log(theta)+log(rho)+(rho-1)*log(y[i])+xb[i]-exp(xb[i])*pow(y[i],rho))*d[i]  # Loglikelihood part 2 = delta*log(h*(t))
+		
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	theta ~ dgamma(2, 0.001)
+	fraction <- exp(-theta)  # Cure rate
+
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, theta = 0.5, rho = 1.0)
+
+#####################
+#  Last Activation  #
+#####################
+
+model 
+{
+
+	c <- 100000
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]
+		s[i] <- exp(-exp(xb[i])*pow(y[i], rho))
+		temp[i] <- 1+exp(-theta)*(1-exp(theta*(1-s[i])))
+		L1[i] <- log(temp[i])
+		L2[i] <- (log(theta)-theta*s[i]-log(temp[i])+log(rho)+(rho-1)*log(y[i])+xb[i]-exp(xb[i])*pow(y[i],rho))*d[i]
+		
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	theta ~ dgamma(2, 0.001)
+	fraction <- exp(-theta)  # Cure rate
+
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, theta = 0.5, rho = 1.0)
+
+#############
+#  Mixture  #
+#############
+
+model 
+{
+
+	c <- 100000
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]
+		s[i] <- exp(-exp(xb[i])*pow(y[i], rho))
+		logf[i] <- log(rho)+(rho-1)*log(y[i])+xb[i]-exp(xb[i])*pow(y[i], rho)  # Logarithm of Weibull probability density function
+		
+		temp[i] <- 1+exp(-theta)-exp(-theta*s[i])
+		Sstar[i] <- p*exp(-theta*(1-s[i])) + (1-p)*temp[i]
+		L1[i] <- log(Sstar[i])
+		L2FA[i] <- exp(-theta*(1-s[i]))
+		L2LA[i] <- exp(-theta*s[i])
+		L2[i] <- (log(theta)-L1[i]+log(p*L2FA[i]+(1-p)*L2LA[i])+logf[i])*d[i]
+
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	theta ~ dgamma(2, 0.001)
+	fraction <- exp(-theta)  # Cure rate
+	p ~ dunif(0, 1)  # Only for Mixtrue model
+
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, theta = 0.5, rho = 1.0, p=0.5)
+
+
+################
+#  Model 1(b)  #
+################
+# N ~ BER(theta)
+
+model 
+{
+
+	c <- 100000
+
+	for (i in 1:284)
+	{
+		# All the activation schemes collide for this model
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]  # Regression on eta
+		s[i] <- exp(-exp(xb[i])*pow(y[i], rho))  # Weibull survival function
+		temp[i] <- 1 - theta*(1 - s[i])
+		L1[i] <- log(temp[i])  # Loglikelihood part 1 = log(S*(t))
+		L2[i] <- (log(theta)-log(temp[i])+log(rho)+(rho-1)*log(y[i])+xb[i]-exp(xb[i])*pow(y[i],rho))*d[i]  # Loglikelihood part 2 = delta*log(h*(t))
+		
+		# Poisson trick adopted from Minhui Chen's codes
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	theta ~ dunif(0, 1)
+	fraction <- 1-theta  # Cure rate
+	
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, theta = 0.5, rho = 1.0)
+
+
+################
+#  Model 1(c)  #
+################
+# N ~ BIN(K, theta)
+
+######################
+#  First Activation  #
+######################
+
+model 
+{
+	
+	c <- 100000
+	K <- 10
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]  # Regression on eta
+		s[i] <- exp(-exp(xb[i])*pow(y[i], rho))  # Weibull survival function
+		temp[i] <- 1 - theta*(1 - s[i])
+		L1[i] <- K*log(temp[i])  # Loglikelihood part 1 = log(S*(t))
+		L2[i] <- (log(K)+log(theta)-log(temp[i])+log(rho)+(rho-1)*log(y[i])+xb[i]-exp(xb[i])*pow(y[i],rho))*d[i]  # Loglikelihood part 2 = delta*log(h*(t))
+		
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+	
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	theta ~ dunif(0, 1)
+	fraction <- pow(1-theta, K)  # Cure rate
+	
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, theta = 0.5, rho = 1.0)
+
+#####################
+#  Last Activation  #
+#####################
+
+model 
+{
+	
+	c <- 100000
+	K <- 10
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]
+		s[i] <- exp(-exp(xb[i])*pow(y[i], rho))
+		temp[i] <- 1+pow(1-theta,K)-pow(1-theta*s[i],K)
+		L1[i] <- log(temp[i])
+		L2[i] <- (log(K)+log(theta)+(K-1)*log(1-theta*s[i])-log(temp[i])+log(rho)+(rho-1)*log(y[i])+xb[i]-exp(xb[i])*pow(y[i],rho))*d[i]
+		
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+	
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	theta ~ dunif(0, 1)
+	fraction <- pow(1-theta, K)  # Cure rate
+	
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, theta = 0.5, rho = 1.0)
+
+#############
+#  Mixture  #
+#############
+
+model 
+{
+	
+	c <- 100000
+	K <- 10
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]
+		s[i] <- exp(-exp(xb[i])*pow(y[i], rho))
+		logf[i] <- log(rho)+(rho-1)*log(y[i])+xb[i]-exp(xb[i])*pow(y[i], rho)  # Logarithm of Weibull probability density function
+		
+		tempFA[i] <- 1-theta*(1-s[i])
+		tempLA[i] <- 1+pow(1-theta, K)-pow(1-theta*s[i], K)
+		Sstar[i] <- p*pow(tempFA[i], K) + (1-p)*tempLA[i]
+		L1[i] <- log(Sstar[i])
+		L2FA[i] <- pow(tempFA[i], K-1)
+		L2LA[i] <- pow(1-theta*s[i], K-1)
+		L2[i] <- (log(K)+log(theta)-L1[i]+log(p*L2FA[i]+(1-p)*L2LA[i])+logf[i])*d[i]
+
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+	
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	theta ~ dunif(0, 1)
+	fraction <- pow(1-theta, K)  # Cure rate
+	p ~ dunif(0, 1)  # Only for Mixtrue model
+	
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, theta = 0.5, rho = 1.0, p=0.5)
+
+
+################
+#  Model 1(d)  #
+################
+# N ~ GEO(1-theta)
+
+######################
+#  First Activation  #
+######################
+
+model 
+{
+	
+	c <- 100000
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]  # Regression on eta
+		s[i] <- exp(-exp(xb[i])*pow(y[i], rho))  # Weibull survival function
+		L1[i] <- log(1-theta)-log(1-theta*s[i])  # Loglikelihood part 1 = log(S*(t))
+		L2[i] <- (log(theta)-log(1-theta*s[i])+log(rho)+(rho-1)*log(y[i])+xb[i]-exp(xb[i])*pow(y[i],rho))*d[i]  # Loglikelihood part 2 = delta*log(h*(t))
+		
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+	
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	theta ~ dunif(0, 1)
+	fraction <- 1-theta  # Cure rate
+	
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, theta = 0.5, rho = 1.0)
+
+#####################
+#  Last Activation  #
+#####################
+
+model 
+{
+	
+	c <- 100000
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]
+		s[i] <- exp(-exp(xb[i])*pow(y[i], rho))
+		temp[i] <- 1-theta*(2-theta)*(1-s[i])
+		L1[i] <- log(temp[i])-log(1-theta*(1-s[i]))
+		L2[i] <- (log(theta)+log(1-theta)-log(temp[i])-log(1-theta*(1-s[i]))+log(rho)+(rho-1)*log(y[i])+xb[i]-exp(xb[i])*pow(y[i],rho))*d[i]
+		
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+	
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	theta ~ dunif(0, 1)
+	fraction <- 1-theta  # Cure rate
+	
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, theta = 0.5, rho = 1.0)
+
+#############
+#  Mixture  #
+#############
+
+model 
+{
+	
+	c <- 100000
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]
+		s[i] <- exp(-exp(xb[i])*pow(y[i], rho))
+		logf[i] <- log(rho)+(rho-1)*log(y[i])+xb[i]-exp(xb[i])*pow(y[i], rho)  # Logarithm of Weibull probability density function
+
+		temp[i] <- 1-theta*(2-theta)*(1-s[i])
+		Sstar[i] <- p*(1-theta) / (1-theta*s[i]) + (1-p)*temp[i] / (1-theta*(1-s[i]))
+		L1[i] <- log(Sstar[i])
+		L2FA[i] <- pow(1-theta*s[i], -2)
+		L2LA[i] <- pow(1-theta*(1-s[i]), -2)
+		L2[i] <- (log(theta)+log(1-theta)-L1[i]+log(p*L2FA[i]+(1-p)*L2LA[i])+logf[i])*d[i]
+				
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+	
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	theta ~ dunif(0, 1)
+	fraction <- 1-theta  # Cure rate
+	p ~ dunif(0, 1)  # Only for Mixtrue model
+	
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, theta = 0.5, rho = 1.0, p=0.5)
+
+
+#############
+#  Model 2  #
+#############
+# N ~ POI(theta)
+
+######################
+#  First Activation  #
+######################
+
+model 
+{
+
+	c <- 100000
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]
+		s[i] <- exp(-exp(eta)*pow(y[i], rho))  # Weibull survival function
+		theta[i] <- exp(xb[i])  # Regression on theta
+		fraction[i] <- exp(-theta[i])  # Cure rate
+		L1[i] <- -theta[i]*(1-s[i])  # Loglikelihood part 1 = log(S*(t))
+		L2[i] <- (xb[i]+log(rho)+(rho-1)*log(y[i])+eta-exp(eta)*pow(y[i],rho))*d[i]  # Loglikelihood part 2 = delta*log(h*(t))
+
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	eta ~ dnorm(0, 0.0001)
+
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, rho = 1.0, eta = 0.0)
+
+#####################
+#  Last Activation  #
+#####################
+
+model 
+{
+
+	c <- 100000
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]
+		s[i] <- exp(-exp(eta)*pow(y[i], rho))
+		theta[i] <- exp(xb[i])
+		fraction[i] <- exp(-theta[i])
+		temp[i] <- 1+exp(-theta[i])*(1-exp(theta[i]*(1-s[i])))
+		L1[i] <- log(temp[i])
+		L2[i] <- (xb[i]-theta[i]*s[i]-log(temp[i])+log(rho)+(rho-1)*log(y[i])+eta-exp(eta)*pow(y[i],rho))*d[i]
+
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	eta ~ dnorm(0, 0.0001)
+
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, rho = 1.0, eta = 0.0)
+
+#############
+#  Mixture  #
+#############
+
+model 
+{
+
+	c <- 100000
+
+	for (i in 1:284) 
+	{
+		xb[i] <- beta0+beta[1]*age[i]+beta[2]*gender[i]+beta[3]*ps[i]
+		s[i] <- exp(-exp(eta)*pow(y[i], rho))
+		logf[i] <- log(rho)+(rho-1)*log(y[i])+eta-exp(eta)*pow(y[i], rho)  # Logarithm of Weibull probability density function
+		theta[i] <- exp(xb[i])
+		fraction[i] <- exp(-theta[i])
+		
+		temp[i] <- 1+exp(-theta[i])-exp(-theta[i]*s[i])
+		Sstar[i] <- p*exp(-theta[i]*(1-s[i])) + (1-p)*temp[i]
+		L1[i] <- log(Sstar[i])
+		L2FA[i] <- exp(-theta[i]*(1-s[i]))
+		L2LA[i] <- exp(-theta[i]*s[i])
+		L2[i] <- (xb[i]-L1[i]+log(p*L2FA[i]+(1-p)*L2LA[i])+logf[i])*d[i]
+		
+		# Poisson trick adopted from Minhui Chen's codes		
+		zeros[i] <- 0
+		mu[i] <- -L1[i]-L2[i]+c
+		zeros[i] ~ dpois(mu[i])		
+	}
+
+	# Priors for parameters	
+	for (i in 1:3) { beta[i] ~ dnorm(0.0, 1.0E-6) }
+	beta0 ~ dnorm(0.0, 1.0E-6)
+	rho ~ dgamma(2, 0.001)
+	eta ~ dnorm(0, 0.0001)
+	p ~ dunif(0, 1)  # Only for Mixtrue model
+
+}
+
+# Initial values
+#Inits 
+list(beta = c(0.0,0.0,0.0), beta0 = 0.0, rho = 1.0, eta = 0.0, p=0.5)
+
+
+# Data
+#datainput 
+y[]  d[]  age[]  gender[]  ps[]
+1.57808 1 -0.849108219 0 0
+1.48219 1 -0.394633018 0 0
+7.33425 0 1.7839389673 1 0
+0.65479 1 0.8574925353 1 1
+2.23288 1 -1.024911705 0 0
+9.38356 0 0.0724899159 0 0
+3.27671 1 -1.170149838 1 0
+0.80274 1 -0.48590749 1 0
+9.64384 0 -1.083512868 0 0
+1.66575 1 -0.854799698 0 0
+0.94247 1 -0.501927952 1 0
+1.68767 1 0.770012383 0 0
+5.94247 1 1.2398756587 0 0
+2.34247 1 1.1566114175 0 0
+0.89863 1 0.7312260022 0 1
+9.03288 0 -1.849333092 1 0
+9.63014 0 -2.197356541 0 0
+0.52603 1 -0.444591563 0 0
+1.82192 1 -1.347428893 0 0
+0.93425 1 0.924736315 1 0
+8.9863 0 -1.134314594 0 0
+1.8274 1 0.5474122847 0 0
+9.3589 0 -1.562861943 0 0
+3.35068 1 -1.58099036 0 0
+8.67397 1 0.6163424288 0 0
+6.09589 0 -0.025530014 0 0
+0.41096 1 0.6226662952 1 0
+2.7863 1 -1.894654135 1 0
+2.56438 1 0.2936144453 0 0
+8.75342 0 0.6922288259 0 0
+8.7589 0 -0.691643944 0 0
+0.56986 1 0.6498589209 0 0
+8.4 0 -0.445434745 0 0
+7.25205 0 -1.099322534 0 0
+4.3863 1 -0.129452219 0 0
+8.36712 0 -0.322119349 1 0
+8.99178 0 0.3136400224 0 0
+0.86575 1 -1.296416371 0 0
+4.76986 0 0.8979652805 1 0
+1.15616 1 0.3469457189 0 0
+7.28767 0 -1.525972722 0 0
+3.13151 1 1.5883206991 0 0
+8.28767 0 1.4283268784 1 0
+8.55068 0 1.3385279751 1 0
+2.21918 1 1.7573787283 0 0
+8.45753 0 -0.891688919 0 0
+4.59452 1 -0.852902538 0 0
+2.88219 1 0.0851376487 0 0
+0.89589 1 0.8907982318 0 0
+1.76164 1 -0.53987115 1 0
+7.8137 0 -1.617668785 0 0
+8.33425 0 -0.77469739 0 0
+2.62192 1 -1.625257425 1 0
+0.16164 1 1.2906773858 0 0
+8.24658 0 -1.333516387 1 0
+1.52603 1 1.1239381075 0 1
+5.30959 1 0.2278462345 0 0
+4.03014 1 -0.065159577 1 0
+0.87123 1 -0.763525226 0 1
+0.41644 1 0.4951349889 1 0
+8.39452 0 -0.511413751 0 0
+4.2411 1 0.8241868388 1 0
+0.13699 1 -1.375886292 0 0
+7.07671 1 0.9399135944 0 1
+0.13151 1 1.1018045751 1 0
+8.0274 0 -1.008680448 1 1
+6.16164 0 -0.295348315 0 0
+1.29863 1 -0.988022484 1 0
+1.29041 1 0.8733022014 1 1
+7.99726 0 -1.929856991 1 0
+8.34795 0 -0.916773589 0 0
+7.30137 0 -1.183429957 0 1
+2.32877 1 0.7046657633 0 0
+0.56438 1 1.0526892124 0 0
+5.6274 1 0.9080834667 1 1
+1.23014 1 -0.195852816 1 0
+7.94521 0 0.3155371823 1 0
+1.51507 1 1.1117119658 0 1
+5.06301 1 -0.985914529 0 0
+3.27671 1 -0.907920176 0 0
+0.60822 0 -1.099322534 1 0
+0.65753 1 -0.687217238 1 0
+0.8411 1 -0.096989704 0 0
+8.4 0 -0.217775553 0 0
+7.96712 0 -0.929842913 1 1
+0.18356 1 1.8693111641 0 0
+2.62466 1 0.9270550661 0 0
+2.55616 1 -0.150110182 1 0
+7.96438 0 -0.896115626 1 0
+7.77808 0 0.847374349 1 1
+0.22192 1 -0.293451155 0 0
+2.33973 1 1.0358255686 0 0
+0.52329 1 -1.119558906 1 0
+8.0411 0 1.0208590848 0 0
+7.83288 0 0.0079864782 0 0
+1.74795 1 -2.307391817 1 0
+0.6411 1 -0.362170503 0 0
+0.38356 1 0.5682810439 0 0
+7.82192 0 0.3378815103 0 0
+0.51781 1 -0.033329449 0 0
+8.09863 0 0.8714050415 0 1
+8.16712 0 -1.643385842 1 0
+4.4274 1 -1.373989132 0 0
+0.88493 1 -2.18133608 0 0
+2.78356 1 1.0722931984 1 0
+2.64658 1 1.2967904567 1 0
+8.2137 0 -0.696281446 1 0
+7.41918 0 -1.129466297 1 0
+0.99726 1 -0.313265936 0 0
+5.88493 1 -0.467357482 0 0
+0.41644 1 1.1498659599 0 0
+0.6411 1 -0.325492078 1 0
+3.53699 1 0.6386867568 1 0
+7.56164 0 -0.842784352 0 0
+7.53151 0 0.2807559169 0 0
+0.27671 1 1.5132774841 0 0
+7.35616 0 0.8657135617 1 0
+0.76986 1 -1.360498217 1 0
+7.62192 0 -1.065173655 0 0
+7.79726 0 0.1235024384 1 0
+0.6411 1 -1.349747644 0 0
+1.14521 1 -0.335610264 0 0
+2.01644 1 -1.740773385 1 0
+2.84384 1 -0.51099216 0 0
+7 0 -0.123971535 0 0
+1.27397 1 1.4129388034 0 0
+7.09589 0 0.0419245615 1 0
+2.0411 1 0.878150499 1 0
+0.83562 1 0.9422323455 1 0
+0.92329 1 -1.290092504 1 0
+2.15068 0 0.1245564161 0 0
+0.07397 1 -0.484221126 0 0
+7.30685 0 -0.175827239 0 0
+2.07671 1 1.6005468408 0 0
+0.34247 1 1.1018045751 0 0
+7.70959 0 -1.483813613 0 0
+2.26849 1 -0.983174187 0 0
+6.1589 0 -1.623781856 1 1
+6.89315 0 -1.212308947 0 0
+3.30685 1 0.9118777866 1 0
+0.36164 1 0.7714879519 0 0
+1.97808 1 0.9835482728 0 0
+1.23836 1 2.3454983062 0 0
+0.10685 1 -0.277641489 0 0
+4.26575 1 0.3267093463 0 0
+7.63836 0 0.3983798325 0 0
+2.06301 1 -0.824023548 1 0
+7.42466 0 -1.619776741 0 1
+7.04384 0 1.4106200524 0 0
+0.50959 1 0.1854763294 0 0
+0.65753 1 0.8408396871 0 1
+6.93151 0 1.4260081274 0 0
+7.23288 0 1.9475163122 0 0
+6.01096 1 1.6791735801 0 0
+0.33699 1 0.2626274998 1 0
+6.47123 0 0.0967314038 0 0
+0.94795 1 -0.006347619 1 0
+2.91781 1 -1.033343527 1 0
+1.11507 1 0.504409993 0 0
+1.59726 1 0.3180667289 1 0
+0.97534 1 0.5124202238 0 1
+0.84932 1 0.0579450231 0 0
+1.38356 1 0.5269651166 1 0
+3.81644 1 -0.640420626 1 1
+7.06849 0 1.7150088232 1 1
+7.0411 0 1.4612109838 0 1
+1.00274 1 -0.846157081 1 0
+6.34795 0 1.2641171468 0 0
+1.18082 1 0.143738811 1 0
+0.97534 1 -0.151796547 0 0
+2.16712 1 0.8187061546 1 0
+6.85479 0 -0.140835178 0 0
+1.38356 1 0.1549109749 0 0
+1.71507 1 0.3410434436 0 0
+0.79452 1 -0.960408268 0 0
+6.86301 0 0.0471944501 1 0
+6.50411 0 -0.639155853 1 1
+0.42466 1 0.5412992139 0 0
+6.30959 0 -1.324662974 0 0
+0.9863 1 -0.099308456 0 0
+6.13699 0 0.0193694379 1 0
+3.8 1 1.201089278 0 0
+6.48493 0 1.1532386887 1 0
+6.96438 0 -0.4570285 1 0
+6.78082 0 0.2493473804 1 0
+0.56164 1 0.1922217869 1 0
+2.67123 1 1.8303139877 0 0
+1.56712 1 0.9264226794 0 0
+2.07397 1 0.5288622765 0 0
+0.33973 1 -0.176670422 0 0
+3.37808 1 -1.915101303 0 0
+3.15068 1 1.9871458752 0 0
+6.81096 0 1.1096040104 0 0
+3.20822 1 1.097167073 0 0
+0.6274 1 -0.944809397 0 0
+1.64384 1 1.5685059176 1 0
+1.40822 1 0.4784821406 0 0
+6.06575 0 0.1521706329 0 0
+1.66301 1 0.7493544194 0 0
+1.36986 1 -1.000670217 1 0
+5.46849 1 -0.979379867 1 0
+0.4274 1 -0.150742569 1 0
+1.13973 1 0.5952628741 1 0
+1.73699 1 -0.321276167 1 0
+5.54521 0 -0.800203651 1 0
+0.85205 1 -0.291132404 0 0
+0.58082 1 0.3954286949 1 0
+0.43014 1 0.486703167 0 0
+1.20822 1 -0.898434377 0 0
+4.36164 1 -0.808424678 0 0
+0.52877 1 0.4428576931 0 0
+6.51507 0 -1.73866543 1 0
+2.89863 1 0.8992300537 0 0
+6.20274 0 -0.114064144 0 0
+1.21644 1 -0.286916493 1 0
+6 0 0.3366167371 1 0
+6.25479 0 -0.620395049 1 0
+6.49863 0 1.6338525374 0 0
+1.13699 1 0.9555124649 1 1
+1.69589 1 -1.308853308 0 0
+6.41096 0 -1.91383653 1 0
+6.02192 0 0.5952628741 0 0
+3.04932 1 -0.153272116 0 0
+5.6274 0 -0.559475136 0 1
+0.72603 1 -0.434684172 0 0
+0.73425 1 -0.928156549 0 0
+1.2274 1 -0.881570733 0 1
+1.47945 1 -0.052511844 0 0
+0.37808 1 -1.316231152 1 0
+5.7589 0 -1.089204347 0 0
+1.48219 1 -0.57633878 1 1
+5.88493 0 0.650280512 0 0
+1.80274 0 -1.129044706 0 0
+1.40548 1 -0.402221657 1 1
+4.74795 0 -0.899066763 1 1
+5.24658 0 0.265367842 0 0
+0.29041 1 1.1018045751 1 0
+5.83836 0 1.5638684156 0 1
+5.32055 0 0.5250679567 1 0
+5.16712 1 2.4390915294 1 0
+5.59178 0 1.2074131444 0 0
+5.77808 0 1.3941779997 0 0
+0.53425 1 -0.938907122 0 0
+2.22466 0 -1.014371928 1 0
+3.59726 1 1.6043411607 0 0
+5.32329 0 1.4650053037 1 0
+1.7863 1 0.6182395888 1 0
+0.70411 1 0.2678973885 0 0
+4.94795 0 -0.355846637 1 0
+5.45479 0 0.8522226466 1 0
+4.32877 1 -1.617036399 0 0
+1.16164 1 0.5722861594 0 0
+5.20274 0 0.5410884183 1 0
+4.40822 0 -0.959565085 0 0
+1.41096 1 0.8829987966 0 0
+4.92877 0 1.300795572 0 0
+5.42192 0 0.2151985016 1 0
+0.98904 1 0.2712701173 0 0
+0.36438 1 -0.504035907 1 0
+4.38082 0 1.1323699294 1 0
+2.12877 1 0.902391987 0 0
+0.7726 1 -0.412339844 0 1
+4.90959 1 -1.655822779 0 0
+1.26849 1 1.0902108199 0 0
+0.58082 1 0.468996341 0 0
+4.95616 0 -0.505089885 0 0
+5.12329 0 1.0214914714 0 0
+4.74795 0 0.1317234647 1 1
+4.90685 0 -0.021103307 1 0
+0.86575 1 -1.070443544 1 0
+1.41918 1 -0.933848029 1 0
+0.4411 1 -1.055687855 0 0
+4.29863 0 -0.867236636 0 0
+4.63836 0 0.2175172527 0 0
+4.8137 0 0.7957294399 1 0
+4.50137 1 -1.327824907 1 0
+3.92329 1 0.3732951624 1 0
+4.86027 0 1.406614937 1 0
+0.52603 1 0.3874184641 1 0
+2.10685 1 1.0712392207 1 0
+4.24384 0 -1.109862311 1 0
+3.39178 1 0.3448377634 1 1
+4.36164 0 0.1249780072 0 0
+4.81918 0 -0.245178975 1 0
+END

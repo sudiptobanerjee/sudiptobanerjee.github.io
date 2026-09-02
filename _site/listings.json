@@ -1,0 +1,19 @@
+[
+  {
+    "listing": "/people.html",
+    "items": []
+  },
+  {
+    "listing": "/research.html",
+    "items": [
+      "/research/multivariate/index.html",
+      "/research/spatial-survival/index.html",
+      "/research/spatial-gradients/index.html",
+      "/research/spatial-massive/index.html",
+      "/research/disease-mapping/index.html",
+      "/research/mechanistic/index.html",
+      "/research/case-studies/index.html",
+      "/research/computing/index.html"
+    ]
+  }
+]

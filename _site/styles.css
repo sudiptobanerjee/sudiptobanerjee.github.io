@@ -1,0 +1,52 @@
+/* css styles */
+
+body {
+  font-family: 'Lato', sans-serif;
+}
+/* other fonts: Source Sans Pro, Open Sans, Roboto, Lato */
+
+.column {
+  padding-left: 0.25rem;
+  padding-right: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.btn-link {
+  display: inline-block;
+  white-space:nowrap;
+  background-color: rgba(0, 123, 255, 0.7);  /* semi-transparent blue background */
+  color: white;                              /* fully opaque white text */
+  padding:1px 6px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size:0.85em;
+  transition: background-color 0.3s ease;
+}
+
+.btn-link:hover {
+  background-color: rgba(0, 86, 179, 0.9);  /* darker, less transparent on hover */
+  color: white;                              /* text stays fully opaque */
+}
+
+.book-cover img {
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 2px; /* optional */
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline; /* optional: underline only on hover */
+}
+
+.centered-image {
+  text-align: center;
+}
+.centered-image img {
+  display: inline-block;
+}

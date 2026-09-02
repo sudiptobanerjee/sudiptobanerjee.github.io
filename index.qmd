@@ -1,0 +1,109 @@
+---
+title: "Sudipto Banerjee"
+description-meta: "Personal website of Dr. Sudipto Banerjee"
+image: "files/profiles/banerjee2.png"
+page-navigation: false
+toc: false
+# sidebar: false
+page-layout: full
+
+about:
+  id: hero-heading
+  template: trestles
+  image-width: 70%
+  links:
+    # - icon: sun
+    #   text: Lab
+    #   href: https://www.github.com
+    #   target: _blank
+    - icon: globe
+      text: UCLA Faculty Profile
+      href: https://ph.ucla.edu/about/faculty-staff-directory/sudipto-banerjee
+      target: _blank
+    - icon: envelope
+      text: E-mail
+      href: mailto:sudipto@ucla.edu
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/sudipto-banerjee-ucla/
+      target: _blank
+    # - icon: youtube
+    #   text: YouTube
+    #   href: https://www.youtube.com
+    #   target: _blank
+    - text: "{{< ai orcid >}} ORCID"   # use academic icons, "" are needed, you also need to install the fontawesome extension
+      href: https://orcid.org/0000-0002-2239-208X
+      target: _blank
+    # - text: "{{< ai clarivate >}} Web of Science"
+    #   href: https://www.webofscience.com
+    #   target: _blank
+    # - text: "{{< ai scopus >}} Scopus"
+    #   href: https://www.scopus.com
+    #   target: _blank
+    - text: "{{< ai google-scholar >}} Google Scholar"
+      href: https://scholar.google.com/citations?user=MgLH0kUAAAAJ&hl=en
+      target: _blank
+	#    - text: "{{< ai researchgate >}} Research Gate"
+	#      href: https://www.researchgate.net/profile/Sudipto-Banerjee-6
+      	#	target: _blank
+
+# listing:   # Comment the listing section and delete corresponding lines in the index.qmd file to remove the recent posts
+#   - id: recent-posts
+#     contents:
+#       - posts
+#       - posts/post-links.yml
+#     exclude:
+#       title: ""
+#     type: grid
+#     max-items: 3
+# #    image-height: 150px
+#     page-size: 3 #set same as max-times to remove the page number setting
+#     fields: [image, date, title, subtitle]
+#     max-description-length: 75
+#     sort:
+#       - "date desc"
+#       - "title asc"
+---
+
+:::{#hero-heading}
+
+## Current Affiliations
+
+- Senior Associate Dean for Academic Programs [UCLA Fielding School of Public Health](https://ph.ucla.edu).
+- Professor, [UCLA Department of Biostatistics](https://ph.ucla.edu/departments/biostatistics).
+- Professor, [UCLA Department of Statistics & Data Science](https://statistics.ucla.edu).
+- Affiliate Professor, [UCLA Institute of the Environment & Sustainability](http://www.ioes.ucla.edu).
+
+## Educational History
+
+- B.S. (Honours) Presidency College, Calcutta, India, 1994.
+- M.STAT. Indian Statistical Institute, Calcutta, India, 1996.
+- Ph.D. Statistics, University of Connecticut, Storrs, Connecticut, USA, 2000.
+
+## Research Interests
+
+- Spatial statistics and Geographic Information Systems.
+- Bayesian inference and machine learning methods.
+- Scalable Gaussian process models for BIG DATA analysis.
+- Statistical computing and related software development.
+
+### Contact Information
+
+Room 51-254B CHS,<br>
+650 Charles E. Young Drive South,<br>
+Los Angeles, CA 90095-1772<br>
+Email: sudipto (at) ucla.edu<br>
+Phone: (310) 825-5916<br>
+Fax: (310) 267-2113<br>
+
+:::
+
+
+<!-- Delete the following section and delete corresponding lines in the yaml part to remove the recent posts -->
+<!-- ## Recent Posts
+Check out the latest &nbsp;[Papers](posts.qmd#category=paper)&nbsp;, &nbsp;[News](posts.qmd#category=news)&nbsp;, &nbsp;[Events](posts.qmd#category=event)&nbsp;, and &nbsp;[More »](/posts.qmd)
+
+:::{#recent-posts}
+:::
+
+<p align="right">[All Posts »](/posts.qmd)</p> -->
