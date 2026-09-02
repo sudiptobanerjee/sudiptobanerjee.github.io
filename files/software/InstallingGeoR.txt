@@ -1,0 +1,68 @@
+
+############ Windows Installation ############ 
+
+IMPORTANT: Make sure you are connected to the web.
+
+Open the R-GUI and click on 
+
+Packages --> Install Packages from CRAN.
+
+A box will appear showing all the packages available for installation,
+They are arranged alphabetically.
+
+Select geoR from the menu and click OK.
+The installation procedure starts immediately.
+You can see the progress on your screen.
+After installation is complete, you are asked:
+"Do you want to save downloaded files?"
+There is no need for you to save downloaded files for running geoR.
+
+Note: If you want to install multiple packages, say ``akima'' and geoR,
+you can highlight all of them together by pressing Ctrl while you choose.
+
+Invoking geoR is done by typing:
+> library(geoR)
+after the installation.
+
+############ Linux Installation ############
+
+Create or choose a directory where you want to install the packages.
+For example, create: mkdir ~/RPackages in your home directory.
+
+Next set the environment variable R_LIB on your shell. 
+For example, if using bash, add the following in your .bashrc file:
+export R_LIBS = ~/RPackages
+
+IMPORTANT: Make sure you are connected to the web.
+
+Invoke R and use the function:
+
+install.packages(pkgs,destdir="~/RPackages", CRAN="http://cran.r-project.org")
+
+where pkgs is the list of packages you want installed.
+For example pkgs can be c("akima","geoR")
+
+To update, use:
+
+update.packages(pkgs,destdir="~/RPackages", CRAN="http://cran.r-project.org") 
+
+MAKING IT ROUTINE:
+
+In fact it is better to create a script file, say MyInstall.R containing:
+
+MyInstall <- function(pkgs)
+  {
+    install.packages(pkgs,destdir="~/RPackages", CRAN="http://cran.r-project.org")
+  }
+
+MyUpdate <- function(pkgs)
+  {
+    update.packages(pkgs,destdir="~/RPackages", CRAN="http://cran.r-project.org")
+  }
+
+and just use MyInstall() or MyUpdate() to do the job.
+
+
+
+
+
