@@ -2,13 +2,13 @@
 *See <a href="https://scholar.google.com/citations?user=MgLH0kUAAAAJ&hl=en">Google Scholar</a>, <a href=https://orcid.org/0000-0002-2239-208X>ORCID</a> or [CV](/files/Banerjee_CV.pdf) for a complete list of peer-reviewed publications.*
 
 ## Featured publications over the last 5 years
-Presicce, L. and Banerjee, S. *(in press)*. Bayesian transfer learning for artificially intelligent geospatial systems: A predictive stacking approach. *Journal of Machine Learning Research*. [arxiv](https://doi.org/10.48550/arXiv.2410.09504)
-
 Halder, A., Li, D. and Banerjee, S. *(in press)*. Bayesian spatiotemporal wombling. *Journal of the American Statistical Association*. [arxiv](https://doi.org/10.48550/arXiv.2407.17804) and [DOI](https://doi.org/10.1080/01621459.2026.2700798)
 
-Pan, S., Zhang, L., Bradley, J.R. and Banerjee, S. *(in press)*. Bayesian inference for spatial-temporal non-Gaussian data using predictive stacking. *Bayesian Analysis*. [arxiv](https://arxiv.org/abs/2406.04655) and [DOI](https://doi.org/10.1214/25-BA1582) 
+Presicce, L. and Banerjee, S. *(2026)*. Bayesian transfer learning for artificially intelligent geospatial systems: A predictive stacking approach. *Journal of Machine Learning Research*, 27(196), 1--60. [arxiv](https://doi.org/10.48550/arXiv.2410.09504)
 
-Peruzzi, M., Banerjee, S., Dunson, D.B. and Finley, A.O. *(in press)*. Gridding and parameter expansion for scalable latent Gaussian models of spatial multivariate data. *Bayesian Analysis*. <a href="https://arxiv.org/abs/2101.03579">arxiv</a> and <a href="https://doi.org/10.1214/25-BA1515">DOI</a>
+Pan, S., Zhang, L., Bradley, J.R. and Banerjee, S. *(2026)*. Bayesian inference for spatial-temporal non-Gaussian data using predictive stacking. *Bayesian Analysis*. [arxiv](https://arxiv.org/abs/2406.04655) and [DOI](https://doi.org/10.1214/25-BA1582) 
+
+Peruzzi, M., Banerjee, S., Dunson, D.B. and Finley, A.O. *(in press)*. Gridding and parameter expansion for scalable latent Gaussian models of spatial multivariate data. *Bayesian Analysis*, 21, 1219--1245. <a href="https://arxiv.org/abs/2101.03579">arxiv</a> and <a href="https://doi.org/10.1214/25-BA1515">DOI</a>
 
 Zhang, L., Tang, W. and Banerjee, S. (2026). Bayesian geostatistics using predictive stacking. *Journal of the American Statistical Association*, 121, 1549–1561. <a href="https://arxiv.org/abs/2304.12414">arxiv</a> and <a href="https://doi.org/10.1080/01621459.2025.2566449">DOI</a>.
 
