@@ -8,7 +8,7 @@ Presicce, L. and Banerjee, S. *(2026)*. Bayesian transfer learning for artificia
 
 Pan, S., Zhang, L., Bradley, J.R. and Banerjee, S. *(2026)*. Bayesian inference for spatial-temporal non-Gaussian data using predictive stacking. *Bayesian Analysis*. [arxiv](https://arxiv.org/abs/2406.04655) and [DOI](https://doi.org/10.1214/25-BA1582) 
 
-Peruzzi, M., Banerjee, S., Dunson, D.B. and Finley, A.O. *(in press)*. Gridding and parameter expansion for scalable latent Gaussian models of spatial multivariate data. *Bayesian Analysis*, 21, 1219--1245. <a href="https://arxiv.org/abs/2101.03579">arxiv</a> and <a href="https://doi.org/10.1214/25-BA1515">DOI</a>
+Peruzzi, M., Banerjee, S., Dunson, D.B. and Finley, A.O. *(2026)*. Gridding and parameter expansion for scalable latent Gaussian models of spatial multivariate data. *Bayesian Analysis*, 21, 1219--1245. <a href="https://arxiv.org/abs/2101.03579">arxiv</a> and <a href="https://doi.org/10.1214/25-BA1515">DOI</a>
 
 Zhang, L., Tang, W. and Banerjee, S. (2026). Bayesian geostatistics using predictive stacking. *Journal of the American Statistical Association*, 121, 1549–1561. <a href="https://arxiv.org/abs/2304.12414">arxiv</a> and <a href="https://doi.org/10.1080/01621459.2025.2566449">DOI</a>.
 
