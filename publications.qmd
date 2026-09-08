@@ -4,7 +4,7 @@
 ## Featured publications over the last 5 years
 Halder, A., Li, D. and Banerjee, S. *(in press)*. Bayesian spatiotemporal wombling. *Journal of the American Statistical Association*. [arxiv](https://doi.org/10.48550/arXiv.2407.17804) and [DOI](https://doi.org/10.1080/01621459.2026.2700798)
 
-Presicce, L. and Banerjee, S. *(2026)*. Bayesian transfer learning for artificially intelligent geospatial systems: A predictive stacking approach. *Journal of Machine Learning Research*, 27(196), 1--60. [arxiv](https://doi.org/10.48550/arXiv.2410.09504)
+Presicce, L. and Banerjee, S. *(2026)*. Bayesian transfer learning for artificially intelligent geospatial systems: A predictive stacking approach. *Journal of Machine Learning Research*, 27(196), 1--60. [arxiv](https://doi.org/10.48550/arXiv.2410.09504) and [URL](https://www.jmlr.org/papers/v27/26-0307.html)
 
 Pan, S., Zhang, L., Bradley, J.R. and Banerjee, S. *(2026)*. Bayesian inference for spatial-temporal non-Gaussian data using predictive stacking. *Bayesian Analysis*. [arxiv](https://arxiv.org/abs/2406.04655) and [DOI](https://doi.org/10.1214/25-BA1582) 
 
