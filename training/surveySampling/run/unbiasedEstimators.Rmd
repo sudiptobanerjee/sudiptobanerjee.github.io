@@ -1,0 +1,686 @@
+---
+title: "Probabilistic Expectations in Finite Populations"
+author: "Sudipto Banerjee<br><em>Department of Biostatistics<br>Department of Statistics & Data Science<br>Institute of the Environment & Sustainability<br>UCLA</em>"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    toc_depth: 3
+    number_sections: true
+    theme: flatly
+    self_contained: true
+format:
+  html:
+    page-layout: full
+    fontsize: 14.5px
+    toc: true
+    toc-location: left
+    toc-expand: 1
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
+    code-copy: hover
+    embed-resources: true
+---
+
+<div style="display:none;">
+$$\newcommand{\T}{\mathrm{\scriptscriptstyle T}}$$
+</div>
+
+<style>
+.main-container {
+  margin-left: 280px !important;
+  max-width: 95% !important;
+}
+
+div.tocify {
+  width: 250px !important;
+}
+
+#quarto-document-content {
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+  max-width: 1500px !important;
+}
+
+li > p {
+  margin-bottom: 0px !important;
+}
+li > ul {
+  margin-top: 2px !important;
+}
+
+details.proof-box {
+  margin-top: 1em;
+  margin-bottom: 1.2em;
+  padding: 0.8em 1.2em;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
+#quarto-content details.proof-box {
+  margin-left: -2em;
+  margin-right: -2em;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+
+details.proof-box summary {
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  outline: none;
+}
+
+details.proof-box summary:hover {
+  color: #2563eb;
+}
+
+details.proof-box[open] summary {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5em;
+  margin-bottom: 0.8em;
+}
+
+.proof-body {
+  padding-top: 0.4em;
+  line-height: 1.6;
+}
+
+.pde-box {
+  background-color: #f0f9ff;
+  border-left: 4px solid #0284c7;
+  padding: 1em 1.2em;
+  margin: 1.2em 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.equation-box {
+  background-color: #f0fdf4;
+  border-left: 4px solid #16a34a;
+  padding: 1em 1.2em;
+  margin: 1.2em 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.equation-title {
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.4em;
+  font-size: 0.95em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.alg-container {
+  font-family: inherit;
+  border-top: 2.5px solid #0f172a;
+  border-bottom: 2.5px solid #0f172a;
+  padding: 14px 18px;
+  margin: 1.5em 0;
+  background-color: #f8fafc;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  overflow-x: auto;
+}
+
+.alg-header {
+  font-weight: 700;
+  font-size: 1.02em;
+  color: #0f172a;
+  border-bottom: 1.5px solid #0f172a;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  letter-spacing: 0.01em;
+}
+
+.alg-io {
+  font-size: 0.92em;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  line-height: 1.55;
+}
+
+.alg-body {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Fira Code", monospace;
+  font-size: 0.88em;
+  line-height: 1.65;
+  color: #0f172a;
+}
+
+.alg-kw {
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.alg-comment {
+  color: #059669;
+  font-style: italic;
+}
+
+.alg-line {
+  display: flex;
+  align-items: baseline;
+}
+
+.alg-num {
+  width: 32px;
+  color: #64748b;
+  user-select: none;
+  text-align: right;
+  padding-right: 12px;
+  font-size: 0.85em;
+}
+
+.alg-indent-1 { margin-left: 20px; }
+.alg-indent-2 { margin-left: 40px; }
+.alg-indent-3 { margin-left: 60px; }
+
+/* Bottom Collapse Button Styling */
+.proof-close-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.2em;
+  padding-top: 0.6em;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.proof-close-btn {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.85em;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.proof-close-btn:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE, 
+  message = FALSE,
+  fig.width = 9,
+  fig.height = 5.5,
+  fig.align = "center"
+)
+```
+
+# Introduction and Notations
+
+In the preceding lectures, we explored measure-theoretic foundations of finite sample spaces and combinatorial counting mechanisms (Feller's urn models and cards). We now advance to **Probabilistic Expectations in Finite Populations**.
+
+In design-based finite population inference, the target population values $Y_1, Y_2, \ldots, Y_N$ are considered fixed, non-random quantities. The sole source of randomness stems from the sampling mechanism—the probability $p(s)$ assigned to selecting a particular sample subset $s$ from the population.
+
+## Finite Population Parameters
+
+Let $U = \{1, 2, \ldots, N\}$ denote a finite target population of $N$ known units. Associated with each unit $i \in U$ is a fixed population characteristic $Y_i$.
+
+::: {.equation-box}
+::: {.equation-title}
+Definition 1.1: Finite Population Parameters
+:::
+We define the following key population parameters:
+
+* **Population Mean:**
+  $$\bar{Y} = \frac{1}{N}\sum_{i=1}^N Y_i$$
+
+* **Population Variance (Sample-Adjusted / Unbiased Version):**
+  $$S^2 = \frac{1}{N-1}\sum_{i=1}^N (Y_i - \bar{Y})^2 = \frac{1}{N-1} \left\{\sum_{i=1}^N Y_i^2 - N\bar{Y}^2\right\}$$
+
+* **Population Variance (Pop. Definition Version):**
+  $$\sigma^2 = \frac{1}{N}\sum_{i=1}^N (Y_i - \bar{Y})^2 = \frac{1}{N} \left\{\sum_{i=1}^N Y_i^2 - N\bar{Y}^2\right\}$$
+
+* **Proportionality Relationship:**
+  $$\sigma^2 = \frac{N-1}{N} S^2$$
+:::
+
+## Sample Statistics
+
+Suppose a sample of fixed size $n$ is drawn from $U$, where $n \le N$ is known.
+
+::: {.equation-box}
+::: {.equation-title}
+Definition 1.2: Sample Quantities
+:::
+Let $\{y_1, y_2, \ldots, y_n\}$ denote the observed values in the sample. We define:
+
+* **Sample Mean:**
+  $$\bar{y} = \frac{1}{n}\sum_{i=1}^n y_i$$
+
+* **Sample Variance:**
+  $$s^2 = \frac{1}{n-1}\sum_{i=1}^n (y_i - \bar{y})^2 = \frac{1}{n-1} \left\{\sum_{i=1}^n y_i^2 - n\bar{y}^2\right\}$$
+
+* **Sampling Fraction:**
+  $$f = \frac{n}{N}$$
+:::
+
+---
+
+# The Backbone of Expectation and Unbiasedness
+
+Before embarking on technical algebraic manipulations, we establish the core conceptual backbone of finite population probability: **What does "Expectation" mean in design-based survey sampling?**
+
+In classical infinite-population statistics, expectation represents an integral over a continuous probability density or a sum over a random variable's sample space. In finite population sampling, expectation is simply a weighted average over all possible samples that could be drawn under the chosen sampling design $p(s)$.
+
+## Finite Population Expectation and Design Unbiasedness
+
+::: {.pde-box}
+**Core Design-Based Expectation Principle:**  
+Let $R = \{r_1, r_2, \dots, r_M\}$ denote the complete collection of all candidate samples allowed under a given sampling design, where $M = |\mathcal{S}|$. Let $t(r)$ be any sample statistic (e.g., sample mean $\bar{y}_r$ or sample variance $s^2_r$) computed from sample $r \in R$.
+
+The **design expectation** of $t(r)$ is defined as the sum over all possible samples weighted by their design selection probabilities $P(r)$:
+$$\text{E}[t] = \sum_{r \in R} t(r) P(r)$$
+
+A sample statistic $\hat{\theta}$ is said to be a **design-unbiased estimator** of a population parameter $\theta$ if:
+$$\text{E}[\hat{\theta}] = \theta$$
+:::
+
+## The Fundamental Theorem: Average of Sample Means Equals Population Mean
+
+Under Simple Random Sampling Without Replacement (SRSWOR), each of the $M = \binom{N}{n}$ distinct samples $r \in R$ has equal selection probability $P(r) = 1/\binom{N}{n}$.
+
+The foundation of finite population design inference rests on showing that if we compute the sample mean $\bar{y}_r$ for every possible sample $r \in R$ and average them together, the result equals the true population mean $\bar{Y}$.
+
+$$\text{E}(\bar{y}) = \frac{1}{\binom{N}{n}} \sum_{r \in R} \bar{y}_r = \bar{Y}$$
+
+<details class="proof-box">
+<summary>Proof: Elementary Averaging over All Possible Samples</summary>
+<div class="proof-body">
+Let $R$ be the set of all $M = \binom{N}{n}$ possible samples of size $n$ from population $U = \{1, \dots, N\}$. For any sample $r \in R$, the sample mean is:
+$$\bar{y}_r = \frac{1}{n} \sum_{i \in r} Y_i$$
+
+Taking the design expectation yields:
+$$\text{E}(\bar{y}) = \sum_{r \in R} \bar{y}_r P(r) = \frac{1}{\binom{N}{n}} \sum_{r \in R} \left( \frac{1}{n} \sum_{i \in r} Y_i \right) = \frac{1}{n \binom{N}{n}} \sum_{r \in R} \sum_{i \in r} Y_i$$
+
+To evaluate the double sum $\sum_{r \in R} \sum_{i \in r} Y_i$, consider how many times a specific population unit $i \in U$ appears across all $M$ samples in $R$. 
+
+* If unit $i$ is fixed in the sample, the remaining $n-1$ slots must be chosen from the remaining $N-1$ population units.
+* Thus, each unit $i$ appears in exactly $\binom{N-1}{n-1}$ distinct samples.
+
+Interchanging the order of summation gives:
+$$\sum_{r \in R} \sum_{i \in r} Y_i = \sum_{i=1}^N \sum_{r \ni i} Y_i = \sum_{i=1}^N \binom{N-1}{n-1} Y_i = \binom{N-1}{n-1} \sum_{i=1}^N Y_i$$
+
+Substituting this result back into the expectation formula:
+$$\text{E}(\bar{y}) = \frac{1}{n \binom{N}{n}} \left( \binom{N-1}{n-1} \sum_{i=1}^N Y_i \right) = \left( \frac{\binom{N-1}{n-1}}{n \binom{N}{n}} \right) \sum_{i=1}^N Y_i$$
+
+Simplifying the ratio of binomial coefficients:
+$$\frac{\binom{N-1}{n-1}}{\binom{N}{n}} = \frac{\frac{(N-1)!}{(n-1)!(N-n)!}}{\frac{N!}{n!(N-n)!}} = \frac{(N-1)! n!(N-n)!}{N! (n-1)!(N-n)!} = \frac{n}{N}$$
+
+Therefore:
+$$\text{E}(\bar{y}) = \left( \frac{n}{N} \cdot \frac{1}{n} \right) \sum_{i=1}^N Y_i = \frac{1}{N} \sum_{i=1}^N Y_i = \bar{Y}$$
+
+This completes the proof.
+</div>
+</details>
+
+## R Demonstration: Complete Enumeration of a Finite Population
+
+To visualize this result, we write an R script that explicitly constructs a finite population of size $N = 6$, enumerates all $M = \binom{6}{3} = 20$ possible SRSWOR samples of size $n = 3$, computes $\bar{y}_r$ and $s^2_r$ for each sample, and verifies that their averages equal $\bar{Y}$ and $S^2$ exactly.
+
+```{r exact-enumeration}
+# 1. Define a concrete finite population U of size N = 6
+Y_pop <- c(12, 18, 25, 31, 38, 44)
+N <- length(Y_pop)
+n <- 3
+
+# Compute true population parameters
+Y_bar <- mean(Y_pop)
+S_sq  <- var(Y_pop) # var() in R computes sample-adjusted variance with 1/(N-1)
+sigma_sq <- mean((Y_pop - Y_bar)^2)
+
+cat("=== Population Parameters ===\n")
+cat("Population Size (N):", N, "\n")
+cat("Sample Size (n):    ", n, "\n")
+cat("Population Mean (Y_bar):", Y_bar, "\n")
+cat("Population Var (S^2):   ", S_sq, "\n")
+cat("Population Var (sigma^2):", sigma_sq, "\n\n")
+
+# 2. Enumerate all M = choose(N, n) possible samples
+sample_indices <- combn(1:N, n, simplify = FALSE)
+M <- length(sample_indices)
+
+# 3. Calculate sample mean and sample variance for every possible sample
+sample_results <- data.frame(
+  Sample_ID = 1:M,
+  Units = sapply(sample_indices, function(idx) paste(idx, collapse = ",")),
+  Values = sapply(sample_indices, function(idx) paste(Y_pop[idx], collapse = ",")),
+  y_bar = sapply(sample_indices, function(idx) mean(Y_pop[idx])),
+  s_sq  = sapply(sample_indices, function(idx) var(Y_pop[idx]))
+)
+
+print(head(sample_results, 10))
+cat("... (showing first 10 of", M, "total samples)\n\n")
+
+# 4. Compute design expectations (averages across all M samples)
+E_y_bar <- mean(sample_results$y_bar)
+E_s_sq  <- mean(sample_results$s_sq)
+
+cat("=== Verification of Design Expectations ===\n")
+cat("Average of Sample Means E(y_bar):", E_y_bar, "| True Y_bar:", Y_bar, "\n")
+cat("Average of Sample Vars  E(s^2):  ", E_s_sq,  "| True S^2:  ", S_sq, "\n")
+cat("Is E(y_bar) == Y_bar?:", isTRUE(all.equal(E_y_bar, Y_bar)), "\n")
+cat("Is E(s^2) == S^2?:    ", isTRUE(all.equal(E_s_sq, S_sq)), "\n")
+```
+
+---
+
+# Method 1: Inclusion Indicator Derivations
+
+Having demonstrated the concept via sample enumeration, we now present the first rigorous mathematical framework used throughout survey sampling: **Sample Inclusion Indicators**.
+
+## Definition and Properties of Inclusion Indicators
+
+Define the random variable $I_i$ for each unit $i \in \{1, 2, \dots, N\}$ in the population:
+
+$$I_i = \begin{cases} 1 & \text{if unit } i \text{ is selected in the sample} \\ 0 & \text{otherwise} \end{cases}$$
+
+Using inclusion indicators, the sample mean is expressed as a linear combination of population parameters:
+
+$$\bar{y} = \frac{1}{n} \sum_{i=1}^N I_i Y_i$$
+
+Note that in this formulation, $Y_i$ is fixed and $I_i$ is the only random variable.
+
+::: {.equation-box}
+::: {.equation-title}
+Lemma 3.1: Moments and Covariances of Inclusion Indicators under SRSWOR
+:::
+For SRSWOR of fixed size $n$ from population size $N$:
+
+1. **First Moment / Expectation:**
+   $$\text{E}(I_i) = P(I_i = 1) = \frac{\binom{N-1}{n-1}}{\binom{N}{n}} = \frac{n}{N} = f$$
+
+2. **Second Moment (Joint Inclusion Probability):**
+   $$\text{E}(I_i^2) = \text{E}(I_i) = \frac{n}{N}$$
+   For $i \neq j$:
+   $$\text{E}(I_i I_j) = P(I_i = 1, I_j = 1) = \frac{\binom{N-2}{n-2}}{\binom{N}{n}} = \frac{n(n-1)}{N(N-1)}$$
+
+3. **Variance:**
+   $$\text{Var}(I_i) = \text{E}(I_i^2) - [\text{E}(I_i)]^2 = \frac{n}{N}\left(1 - \frac{n}{N}\right) = \frac{n(N-n)}{N^2}$$
+
+4. **Covariance ($i \neq j$):**
+   $$\text{Cov}(I_i, I_j) = \text{E}(I_i I_j) - \text{E}(I_i)\text{E}(I_j) = \frac{n(n-1)}{N(N-1)} - \frac{n^2}{N^2} = -\frac{n(N-n)}{N^2(N-1)}$$
+:::
+
+<details class="proof-box">
+<summary>Proof: Unbiasedness of Sample Mean $\text{E}(\bar{y}) = \bar{Y}$ via Indicators</summary>
+<div class="proof-body">
+Using linearity of expectation:
+
+$$\text{E}(\bar{y}) = \text{E}\left( \frac{1}{n} \sum_{i=1}^N I_i Y_i \right) = \frac{1}{n} \sum_{i=1}^N \text{E}(I_i) Y_i$$
+
+Substitute $\text{E}(I_i) = \frac{n}{N}$:
+
+$$\text{E}(\bar{y}) = \frac{1}{n} \sum_{i=1}^N \left( \frac{n}{N} \right) Y_i = \frac{1}{N} \sum_{i=1}^N Y_i = \bar{Y}$$
+</div>
+</details>
+
+<details class="proof-box">
+<summary>Proof: Variance of Sample Mean $\text{Var}(\bar{y}) = \frac{1-f}{n} S^2$ via Indicators</summary>
+<div class="proof-body">
+Apply the linear expansion formula for the variance of a sum:
+
+$$\text{Var}(\bar{y}) = \text{Var}\left( \frac{1}{n} \sum_{i=1}^N I_i Y_i \right) = \frac{1}{n^2} \left\{ \sum_{i=1}^N Y_i^2 \text{Var}(I_i) + \sum_{i=1}^N \sum_{j \neq i}^N Y_i Y_j \text{Cov}(I_i, I_j) \right\}$$
+
+Substitute $\text{Var}(I_i) = \frac{n(N-n)}{N^2}$ and $\text{Cov}(I_i, I_j) = -\frac{n(N-n)}{N^2(N-1)}$:
+
+$$\text{Var}(\bar{y}) = \frac{1}{n^2} \left\{ \frac{n(N-n)}{N^2} \sum_{i=1}^N Y_i^2 - \frac{n(N-n)}{N^2(N-1)} \sum_{i=1}^N Y_i \sum_{j \neq i}^N Y_j \right\}$$
+
+Factor out $\frac{n(N-n)}{N^2}$:
+
+$$\text{Var}(\bar{y}) = \frac{N-n}{n N^2} \left\{ \sum_{i=1}^N Y_i^2 - \frac{1}{N-1} \sum_{i=1}^N Y_i (N\bar{Y} - Y_i) \right\}$$
+
+Expand the term inside the brackets:
+
+$$\sum_{i=1}^N Y_i (N\bar{Y} - Y_i) = N\bar{Y} \sum_{i=1}^N Y_i - \sum_{i=1}^N Y_i^2 = N^2\bar{Y}^2 - \sum_{i=1}^N Y_i^2$$
+
+Substituting this back gives:
+
+$$\sum_{i=1}^N Y_i^2 - \frac{1}{N-1} \left( N^2\bar{Y}^2 - \sum_{i=1}^N Y_i^2 \right) = \left( 1 + \frac{1}{N-1} \right) \sum_{i=1}^N Y_i^2 - \frac{N^2}{N-1}\bar{Y}^2 = \frac{N}{N-1} \left( \sum_{i=1}^N Y_i^2 - N\bar{Y}^2 \right)$$
+
+Recalling $S^2 = \frac{1}{N-1} \left( \sum_{i=1}^N Y_i^2 - N\bar{Y}^2 \right)$, the expression inside the braces simplifies to $N S^2$. Therefore:
+
+$$\text{Var}(\bar{y}) = \frac{N-n}{n N^2} \left( N S^2 \right) = \frac{N-n}{n N} S^2 = \frac{1 - f}{n} S^2$$
+</div>
+</details>
+
+<details class="proof-box">
+<summary>Proof: Unbiasedness of Sample Variance $\text{E}(s^2) = S^2$ via Indicators</summary>
+<div class="proof-body">
+We write $(n-1)s^2 = \sum_{i=1}^n y_i^2 - n\bar{y}^2 = \sum_{i=1}^N I_i Y_i^2 - n\bar{y}^2$. Taking expectations:
+
+$$\text{E}((n-1)s^2) = \text{E}\left( \sum_{i=1}^N I_i Y_i^2 \right) - n \text{E}(\bar{y}^2) = \sum_{i=1}^N \text{E}(I_i) Y_i^2 - n \left\{ \text{Var}(\bar{y}) + [\text{E}(\bar{y})]^2 \right\}$$
+
+Substitute $\text{E}(I_i) = \frac{n}{N}$, $\text{Var}(\bar{y}) = \frac{1-f}{n}S^2$, and $\text{E}(\bar{y}) = \bar{Y}$:
+
+$$\text{E}((n-1)s^2) = \frac{n}{N} \sum_{i=1}^N Y_i^2 - n \left\{ \frac{1-f}{n} S^2 + \bar{Y}^2 \right\} = \frac{n}{N} \sum_{i=1}^N Y_i^2 - (1-f)S^2 - n\bar{Y}^2$$
+
+Group terms involving the population values:
+
+$$\text{E}((n-1)s^2) = n \left\{ \frac{1}{N} \sum_{i=1}^N Y_i^2 - \bar{Y}^2 \right\} - (1-f)S^2$$
+
+Notice that $\frac{1}{N} \sum_{i=1}^N Y_i^2 - \bar{Y}^2 = \sigma^2 = \frac{N-1}{N} S^2$:
+
+$$\text{E}((n-1)s^2) = n \left( \frac{N-1}{N} S^2 \right) - \left( \frac{N-n}{N} \right) S^2 = \left( \frac{nN - n - N + n}{N} \right) S^2 = \left( \frac{N(n-1)}{N} \right) S^2 = (n-1) S^2$$
+
+Dividing both sides by $n-1$ yields:
+
+$$\text{E}(s^2) = S^2$$
+</div>
+</details>
+
+---
+
+# Method 2: Averaging over Sample Space $R$ Derivations
+
+The second technique operates directly on the collection of all possible SRSWOR samples $R = \{r_1, r_2, \dots, r_M\}$, where $M = \binom{N}{n}$.
+
+Recall the key combinatorial counting rules:
+
+1. Any single population unit $i$ appears in $\binom{N-1}{n-1}$ samples.
+2. Any pair of population units $(i, j)$ with $i \neq j$ appears in $\binom{N-2}{n-2}$ samples.
+
+<details class="proof-box">
+<summary>Proof: Variance of Sample Mean $\text{Var}(\bar{y}) = \frac{1-f}{n} S^2$ via Direct Summation over $R$</summary>
+<div class="proof-body">
+By definition:
+
+$$\text{Var}(\bar{y}) = \text{E}(\bar{y} - \bar{Y})^2 = \frac{1}{\binom{N}{n}} \sum_{r \in R} (\bar{y}_r - \bar{Y})^2 = \frac{1}{\binom{N}{n}} \sum_{r \in R} \left\{ \frac{1}{n} \sum_{i \in r} (Y_i - \bar{Y}) \right\}^2$$
+
+Expand the squared sum inside:
+
+$$\text{Var}(\bar{y}) = \frac{1}{n^2 \binom{N}{n}} \sum_{r \in R} \left\{ \sum_{i \in r} (Y_i - \bar{Y})^2 + \sum_{i \in r} \sum_{j \in r \setminus \{i\}} (Y_i - \bar{Y})(Y_j - \bar{Y}) \right\}$$
+
+Interchanging the order of summation between samples $r \in R$ and units $i, j \in U$:
+
+$$\text{Var}(\bar{y}) = \frac{\binom{N-1}{n-1}}{n^2 \binom{N}{n}} \sum_{i=1}^N (Y_i - \bar{Y})^2 + \frac{\binom{N-2}{n-2}}{n^2 \binom{N}{n}} \sum_{i=1}^N \sum_{j \neq i}^N (Y_i - \bar{Y})(Y_j - \bar{Y})$$
+
+Simplify the combinatorial ratios $\frac{\binom{N-1}{n-1}}{\binom{N}{n}} = \frac{n}{N}$ and $\frac{\binom{N-2}{n-2}}{\binom{N}{n}} = \frac{n(n-1)}{N(N-1)}$:
+
+$$\text{Var}(\bar{y}) = \frac{1}{nN} \sum_{i=1}^N (Y_i - \bar{Y})^2 + \frac{n-1}{nN(N-1)} \sum_{i=1}^N (Y_i - \bar{Y}) \left\{ \sum_{j \neq i}^N (Y_j - \bar{Y}) \right\}$$
+
+Note that $\sum_{j \neq i}^N (Y_j - \bar{Y}) = \sum_{j=1}^N (Y_j - \bar{Y}) - (Y_i - \bar{Y}) = 0 - (Y_i - \bar{Y}) = -(Y_i - \bar{Y})$. Substituting this:
+
+$$\text{Var}(\bar{y}) = \frac{1}{nN} \sum_{i=1}^N (Y_i - \bar{Y})^2 - \frac{n-1}{nN(N-1)} \sum_{i=1}^N (Y_i - \bar{Y})^2$$
+
+Factor out $\frac{1}{nN} \sum_{i=1}^N (Y_i - \bar{Y})^2$:
+
+$$\text{Var}(\bar{y}) = \frac{1}{nN} \left( 1 - \frac{n-1}{N-1} \right) \sum_{i=1}^N (Y_i - \bar{Y})^2 = \frac{N-n}{nN} \left\{ \frac{1}{N-1} \sum_{i=1}^N (Y_i - \bar{Y})^2 \right\} = \frac{1-f}{n} S^2$$
+</div>
+</details>
+
+<details class="proof-box">
+<summary>Proof: Unbiasedness of Sample Variance $\text{E}(s^2) = S^2$ via Direct Summation over $R$</summary>
+<div class="proof-body">
+Express $(n-1)s^2_r$ using deviations from the population mean $z_i = Y_i - \bar{Y}$:
+
+$$\sum_{i \in r} (Y_i - \bar{y}_r)^2 = \sum_{i \in r} (z_i - \bar{z}_r)^2 = \sum_{i \in r} z_i^2 - n\bar{z}_r^2 = \sum_{i \in r} (Y_i - \bar{Y})^2 - n(\bar{y}_r - \bar{Y})^2$$
+
+Taking expectation over $R$:
+
+$$\text{E}((n-1)s^2) = \frac{1}{\binom{N}{n}} \sum_{r \in R} \sum_{i \in r} (Y_i - \bar{Y})^2 - n \sum_{r \in R} (\bar{y}_r - \bar{Y})^2 P(r)$$
+
+$$\text{E}((n-1)s^2) = \frac{\binom{N-1}{n-1}}{\binom{N}{n}} \sum_{i=1}^N (Y_i - \bar{Y})^2 - n \text{Var}(\bar{y})$$
+
+Substitute $\frac{\binom{N-1}{n-1}}{\binom{N}{n}} = \frac{n}{N}$ and $\text{Var}(\bar{y}) = \frac{1-f}{n} S^2$:
+
+$$\text{E}((n-1)s^2) = \frac{n}{N} (N-1) S^2 - n \left( \frac{1-f}{n} S^2 \right) = f(N-1)S^2 - (1-f)S^2 = (fN - 1)S^2 = (n-1) S^2$$
+
+Dividing by $n-1$ yields $\text{E}(s^2) = S^2$.
+</div>
+</details>
+
+---
+
+# Method 3: Sample Member Moments Derivations
+
+The third technique considers the sample draw as a sequence of random variables $(y_1, y_2, \dots, y_n)$, evaluating the marginal and joint distributions of individual sample members.
+
+::: {.equation-box}
+::: {.equation-title}
+Lemma 5.1: Marginal and Joint Distributions of Sample Members
+:::
+Under SRSWOR:
+
+1. **Marginal Distribution:** Each sample draw $y_i$ is equally likely to be any population unit $Y_j$:
+   $$P(y_i = Y_j) = \frac{1}{N}, \quad \forall i \in \{1, \dots, n\}, j \in \{1, \dots, N\}$$
+   
+2. **First Moment:** $\text{E}(y_i) = \sum_{j=1}^N Y_j P(y_i = Y_j) = \frac{1}{N} \sum_{j=1}^N Y_j = \bar{Y}$
+
+3. **Variance of a Sample Member:**
+   $$\text{Var}(y_i) = \text{E}(y_i^2) - [\text{E}(y_i)]^2 = \frac{1}{N} \sum_{j=1}^N Y_j^2 - \bar{Y}^2 = \sigma^2 = \frac{N-1}{N} S^2$$
+
+4. **Joint Distribution ($i \neq j$):** For distinct sample positions $i \neq j$ and distinct population units $k \neq l$:
+   $$P(y_i = Y_k, y_j = Y_l) = \frac{1}{N(N-1)}$$
+:::
+
+<details class="proof-box">
+<summary>Proof: Expectation of Product of Distinct Sample Members $\text{E}(y_i y_j)$</summary>
+<div class="proof-body">
+For $i \neq j$:
+
+$$\text{E}(y_i y_j) = \sum_{k=1}^N \sum_{l \neq k}^N Y_k Y_l P(y_i = Y_k, y_j = Y_l) = \frac{1}{N(N-1)} \sum_{k=1}^N \sum_{l \neq k}^N Y_k Y_l$$
+
+Rewrite the double sum over $l \neq k$:
+
+$$\sum_{k=1}^N Y_k \left( \sum_{l=1}^N Y_l - Y_k \right) = \left( \sum_{k=1}^N Y_k \right) \left( \sum_{l=1}^N Y_l \right) - \sum_{k=1}^N Y_k^2 = N^2\bar{Y}^2 - \sum_{k=1}^N Y_k^2$$
+
+Thus:
+
+$$\text{E}(y_i y_j) = \frac{1}{N(N-1)} \left\{ N^2\bar{Y}^2 - \sum_{k=1}^N Y_k^2 \right\} = -\frac{1}{N-1} \left\{ \frac{1}{N} \sum_{k=1}^N Y_k^2 - N\bar{Y}^2 \right\}$$
+
+Add and subtract $\bar{Y}^2$:
+
+$$\text{E}(y_i y_j) = -\frac{1}{N-1} \left\{ \frac{1}{N} \sum_{k=1}^N Y_k^2 - \bar{Y}^2 \right\} + \bar{Y}^2 = -\frac{1}{N-1} \left( \frac{N-1}{N} S^2 \right) + \bar{Y}^2 = -\frac{S^2}{N} + \bar{Y}^2$$
+</div>
+</details>
+
+<details class="proof-box">
+<summary>Proof: Variance of Sample Mean $\text{Var}(\bar{y}) = \frac{1-f}{n} S^2$ via Sample Member Moments</summary>
+<div class="proof-body">
+We expand $\text{Var}(\bar{y}) = \text{E}(\bar{y}^2) - \bar{Y}^2$:
+
+$$\text{E}(\bar{y}^2) = \text{E}\left( \frac{1}{n} \sum_{i=1}^n y_i \right)^2 = \frac{1}{n^2} \left[ \sum_{i=1}^n \text{E}(y_i^2) + \sum_{i=1}^n \sum_{j \neq i}^n \text{E}(y_i y_j) \right]$$
+
+Substitute $\text{E}(y_i^2) = \frac{1}{N}\sum_{k=1}^N Y_k^2$ and $\text{E}(y_i y_j) = \bar{Y}^2 - \frac{S^2}{N}$:
+
+$$\text{E}(\bar{y}^2) = \frac{1}{n^2} \left[ n \left( \frac{1}{N} \sum_{k=1}^N Y_k^2 \right) + n(n-1) \left( \bar{Y}^2 - \frac{S^2}{N} \right) \right] = \frac{1}{n} \left( \frac{1}{N} \sum_{k=1}^N Y_k^2 \right) + \frac{n-1}{n} \bar{Y}^2 - \frac{(n-1)S^2}{nN}$$
+
+Subtract $\bar{Y}^2$:
+
+$$\text{Var}(\bar{y}) = \frac{1}{n} \left( \frac{1}{N} \sum_{k=1}^N Y_k^2 - \bar{Y}^2 \right) - \frac{(n-1)S^2}{nN} = \frac{1}{n} \sigma^2 - \frac{(n-1)S^2}{nN}$$
+
+Substitute $\sigma^2 = \frac{N-1}{N} S^2$:
+
+$$\text{Var}(\bar{y}) = \frac{(N-1)S^2}{nN} - \frac{(n-1)S^2}{nN} = \frac{(N-n)S^2}{nN} = \frac{1-f}{n} S^2$$
+</div>
+</details>
+
+<details class="proof-box">
+<summary>Proof: Unbiasedness of Sample Variance $\text{E}(s^2) = S^2$ via Sample Member Moments</summary>
+<div class="proof-body">
+Using $(n-1)s^2 = \sum_{i=1}^n y_i^2 - n\bar{y}^2$:
+
+$$\text{E}((n-1)s^2) = \sum_{i=1}^n \text{E}(y_i^2) - n \text{E}(\bar{y}^2) = \sum_{i=1}^n \text{E}(y_i^2) - n \left\{ \text{Var}(\bar{y}) + [\text{E}(\bar{y})]^2 \right\}$$
+
+$$\text{E}((n-1)s^2) = n \left( \frac{1}{N} \sum_{k=1}^N Y_k^2 \right) - n \left\{ \frac{1-f}{n} S^2 + \bar{Y}^2 \right\} = n \left( \frac{1}{N} \sum_{k=1}^N Y_k^2 - \bar{Y}^2 \right) - (1-f)S^2$$
+
+$$\text{E}((n-1)s^2) = n \sigma^2 - (1-f)S^2 = n \left( \frac{N-1}{N} S^2 \right) - \left( \frac{N-n}{N} \right) S^2 = (n-1) S^2$$
+
+Dividing by $n-1$ yields $\text{E}(s^2) = S^2$.
+</div>
+</details>
+
+---
+
+# Summary and Comparison of Proof Methods
+
+In this lecture, we established:
+
+1. The foundational concept of expectation in finite populations as a weighted average over sample space $R$.
+2. Concrete proof that averaging sample means across all possible samples yields the population mean $\bar{Y}$.
+3. Three complementary analytical proof techniques for deriving design moments under SRSWOR:
+
+| Proof Method | Key Tool / Mechanism | Primary Advantage |
+| :--- | :--- | :--- |
+| **Method 1: Inclusion Indicators ($I_i$)** | Binary selection variables $I_i \in \{0, 1\}$ | Highly flexible; generalizes directly to complex unequal probability designs. |
+| **Method 2: Sample Space Averaging ($R$)** | Combinatorial enumeration of $\binom{N-1}{n-1}$ and $\binom{N-2}{n-2}$ | Intuitively transparent; directly operates on explicit sample sets. |
+| **Method 3: Member Moments ($y_i$)** | Sequential random draw distributions | Aligns with standard i.i.d. random variable algebra. |
+
+In **Lecture 4**, we will extend these expectation mechanisms to unequal probability sampling designs and general linear estimators.
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Target all proof-box expandable details
+  document.querySelectorAll('details.proof-box').forEach(details => {
+    const summary = details.querySelector('summary');
+    const body = details.querySelector('.proof-body') || details;
+
+    // Create container and button
+    const container = document.createElement('div');
+    container.className = 'proof-close-container';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'proof-close-btn';
+    closeBtn.type = 'button';
+    closeBtn.innerHTML = '&#9650; Collapse Proof'; // Upward triangle symbol
+
+    // Handle smooth collapse without page jumping
+    closeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      // 1. Smoothly scroll the top summary header into view
+      summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // 2. Close the box after scrolling completes
+      setTimeout(() => {
+        details.open = false;
+      }, 150);
+    });
+
+    container.appendChild(closeBtn);
+    body.appendChild(container);
+  });
+});
+</script>

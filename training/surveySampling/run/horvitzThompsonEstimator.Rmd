@@ -1,0 +1,613 @@
+---
+title: "Horvitz-Thompson Estimation Theory and Applications"
+author: "Sudipto Banerjee<br><em>Department of Biostatistics<br>Department of Statistics & Data Science<br>Institute of the Environment & Sustainability<br>UCLA</em>"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    toc_depth: 3
+    number_sections: true
+    theme: flatly
+    self_contained: true
+format:
+  html:
+    page-layout: full
+    fontsize: 14.5px
+    toc: true
+    toc-location: left
+    toc-expand: 1
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
+    code-copy: hover
+    embed-resources: true
+---
+
+<div style="display:none;">
+$$\newcommand{\T}{\mathrm{\scriptscriptstyle T}}$$
+</div>
+
+<style>
+.main-container {
+  margin-left: 280px !important;
+  max-width: 95% !important;
+}
+
+div.tocify {
+  width: 250px !important;
+}
+
+#quarto-document-content {
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+  max-width: 1500px !important;
+}
+
+li > p {
+  margin-bottom: 0px !important;
+}
+
+li > ul {
+  margin-top: 2px !important;
+}
+
+details.proof-box {
+  margin-top: 1em;
+  margin-bottom: 1.2em;
+  padding: 0.8em 1.2em;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
+#quarto-content details.proof-box {
+  margin-left: -2em;
+  margin-right: -2em;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+
+details.proof-box summary {
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  outline: none;
+}
+
+details.proof-box summary:hover {
+  color: #2563eb;
+}
+
+details.proof-box[open] summary {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5em;
+  margin-bottom: 0.8em;
+}
+
+.proof-body {
+  padding-top: 0.4em;
+  line-height: 1.6;
+}
+
+.pde-box {
+  background-color: #f0f9ff;
+  border-left: 4px solid #0284c7;
+  padding: 1em 1.2em;
+  margin: 1.2em 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.equation-box {
+  background-color: #f0fdf4;
+  border-left: 4px solid #16a34a;
+  padding: 1em 1.2em;
+  margin: 1.2em 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.equation-title {
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.4em;
+  font-size: 0.95em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.proof-close-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.2em;
+  padding-top: 0.6em;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.proof-close-btn {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.85em;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.proof-close-btn:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE, 
+  message = FALSE,
+  fig.width = 9,
+  fig.height = 5.5,
+  fig.align = "center"
+)
+```
+
+# Foundations & Inclusion Probabilities
+
+In design-based finite population inference, random sampling distributions stem from the **sampling design**—the probability mechanism used to select units—rather than an assumed superpopulation distribution for the response variable $Y$.
+
+Let $U = \{1, 2, \ldots, N\}$ denote a finite population of known size $N$, with fixed, non-random target values $\{Y_1, Y_2, \ldots, Y_N\}$. We draw a sample $s \subset U$ of size $n$ under a specified Sampling Without Replacement (SWOR) design.
+
+## Key Population & Sample Parameters
+
+| Parameter | Finite Population Quantity | Sample Quantity |
+| :--- | :--- | :--- |
+| **Mean** | $\bar{Y} = \frac{1}{N}\sum_{i=1}^N Y_i$ | $\bar{y} = \frac{1}{n}\sum_{i=1}^n y_i$ |
+| **Variance ($S^2$)** | $S^2 = \frac{1}{N-1}\sum_{i=1}^N (Y_i - \bar{Y})^2$ | $s^2 = \frac{1}{n-1}\sum_{i=1}^n (y_i - \bar{y})^2$ |
+| **Variance ($\sigma^2$)** | $\sigma^2 = \frac{1}{N}\sum_{i=1}^N (Y_i - \bar{Y})^2 = \frac{N-1}{N}S^2$ | — |
+| **Sampling Fraction** | — | $f = \frac{n}{N}$ |
+
+## Sample Indicators and Inclusion Probabilities
+
+To formalize design-based randomness, we introduce the sample inclusion indicator for each population unit $i \in U$:
+
+$$I_i = \begin{cases} 1 & \text{if unit } i \text{ is included in the sample } s \\ 0 & \text{otherwise} \end{cases}$$
+
+Because $I_i$ is a Bernoulli random variable under the sampling design:
+
+1. **First-order inclusion probability ($\pi_i$):** The marginal probability that unit $i$ is sampled:
+   $$\pi_i = P(I_i = 1) = E(I_i)$$
+
+2. **Second-order (joint) inclusion probability ($\pi_{ij}$):** The probability that both units $i$ and $j$ are sampled:
+   $$\pi_{ij} = P(I_i = 1, I_j = 1) = E(I_i I_j)$$
+
+<div class="pde-box">
+<div class="equation-title">Fundamental Property of Inclusion Probabilities</div>
+
+Inclusion probabilities are marginal probabilities across population units; thus, $\sum_{i=1}^N \pi_i \neq 1$. Instead, the sum of inclusion probabilities across all population units equals the expected sample size:
+
+$$\sum_{i=1}^N \pi_i = \sum_{i=1}^N E(I_i) = E\left(\sum_{i=1}^N I_i\right) = E(n) = n$$
+
+</div>
+
+---
+
+# The Horvitz-Thompson Estimator
+
+Proposed by Daniel Horvitz and Donald Thompson (1952), the Horvitz-Thompson (HT) estimator provides a unified framework for unbiased estimation of population totals and means under **any** probability sampling design, provided all $\pi_i > 0$.
+
+## Definition
+
+The Horvitz-Thompson estimator for the population total $Y = \sum_{i=1}^N Y_i$ weights each observed value $y_i$ by the inverse of its inclusion probability $w_i = 1/\pi_i$:
+
+$$\hat{Y}_{HT} = \sum_{i=1}^n \frac{y_i}{\pi_i} = \sum_{i=1}^N I_i \frac{Y_i}{\pi_i}$$
+
+The estimator for the population mean $\bar{Y}$ is simply:
+
+$$\hat{\bar{Y}}_{HT} = \frac{1}{N} \hat{Y}_{HT} = \frac{1}{N} \sum_{i=1}^n \frac{y_i}{\pi_i}$$
+
+<details class="proof-box">
+<summary><b>Proof: Unbiasedness of the Horvitz-Thompson Estimator</b></summary>
+<div class="proof-body">
+
+To prove that $E(\hat{Y}_{HT}) = Y$ for any probability sampling design with $\pi_i > 0$:
+
+$$E(\hat{Y}_{HT}) = E\left( \sum_{i=1}^N I_i \frac{Y_i}{\pi_i} \right)$$
+
+By linearity of expectation:
+
+$$E(\hat{Y}_{HT}) = \sum_{i=1}^N E(I_i) \frac{Y_i}{\pi_i}$$
+
+Since $E(I_i) = \pi_i$:
+
+$$E(\hat{Y}_{HT}) = \sum_{i=1}^N \pi_i \frac{Y_i}{\pi_i} = \sum_{i=1}^N Y_i = Y \quad \blacksquare$$
+
+</div>
+</details>
+
+<details class="proof-box">
+<summary><b>Derivation: Theoretical Variance of the HT Estimator</b></summary>
+<div class="proof-body">
+
+To compute $\text{Var}(\hat{Y}_{HT})$, we evaluate the variance and covariances of the sample indicators $I_i$:
+
+1. **Variance of indicator $I_i$:**
+   $$\text{Var}(I_i) = E(I_i^2) - (E(I_i))^2 = E(I_i) - \pi_i^2 = \pi_i(1 - \pi_i)$$
+
+2. **Covariance of indicators $I_i, I_j$ ($i \neq j$):**
+   $$\text{Cov}(I_i, I_j) = E(I_i I_j) - E(I_i)E(I_j) = \pi_{ij} - \pi_i \pi_j$$
+
+Using the variance formula for a linear combination of random variables:
+
+$$\text{Var}(\hat{Y}_{HT}) = \text{Var}\left( \sum_{i=1}^N I_i \frac{Y_i}{\pi_i} \right) = \sum_{i=1}^N \text{Var}(I_i) \left(\frac{Y_i}{\pi_i}\right)^2 + \sum_{i=1}^N \sum_{j \neq i}^N \text{Cov}(I_i, I_j) \left(\frac{Y_i}{\pi_i}\right) \left(\frac{Y_j}{\pi_j}\right)$$
+
+Substituting $\text{Var}(I_i)$ and $\text{Cov}(I_i, I_j)$:
+
+$$\text{Var}(\hat{Y}_{HT}) = \sum_{i=1}^N \pi_i(1 - \pi_i) \frac{Y_i^2}{\pi_i^2} + \sum_{i=1}^N \sum_{j \neq i}^N (\pi_{ij} - \pi_i \pi_j) \frac{Y_i Y_j}{\pi_i \pi_j}$$
+
+$$\text{Var}(\hat{Y}_{HT}) = \sum_{i=1}^N \frac{1 - \pi_i}{\pi_i} Y_i^2 + \sum_{i=1}^N \sum_{j \neq i}^N \frac{\pi_{ij} - \pi_i \pi_j}{\pi_i \pi_j} Y_i Y_j \quad \blacksquare$$
+
+</div>
+</details>
+
+---
+
+# Variance Estimation: HT vs. Sen-Yates-Grundy Formulations
+
+In practice, population values $Y_i$ are unobserved for non-sampled units, so $\text{Var}(\hat{Y}_{HT})$ must be estimated from sample data. Two primary variance estimators exist: the classical Horvitz-Thompson variance estimator and the Sen-Yates-Grundy (SYG) variance estimator.
+
+## The Classical Horvitz-Thompson Variance Estimator
+
+Substituting the sample indicator $I_i I_j / \pi_{ij}$ into the population variance expression yields the plugin sample estimator:
+
+$$\hat{V}_{HT}(\hat{Y}_{HT}) = \sum_{i=1}^n \frac{1 - \pi_i}{\pi_i^2} y_i^2 + \sum_{i=1}^n \sum_{j \neq i}^n \frac{\pi_{ij} - \pi_i \pi_j}{\pi_i \pi_j \pi_{ij}} y_i y_j$$
+
+Provided $\pi_{ij} > 0$ for all pairs $(i, j)$, $\hat{V}_{HT}(\hat{Y}_{HT})$ is strictly unbiased for $\text{Var}(\hat{Y}_{HT})$. However, it has a major practical drawback: **it can produce negative variance estimates** for certain sample realizations.
+
+## The Sen-Yates-Grundy (SYG) Variance Formulation
+
+For sampling designs with a **fixed sample size** $n$ (such as SRSWOR, stratified sampling with fixed $m_h$, or fixed-size PPS designs), Sen (1953) and Yates & Grundy (1953) showed that the variance can be rewritten into an alternative pairwise difference form.
+
+<details class="proof-box">
+<summary><b>Derivation: Sen-Yates-Grundy Variance Identity</b></summary>
+<div class="proof-body">
+
+For any fixed sample size design, $\sum_{j \neq i}^N \pi_{ij} = (n-1)\pi_i$. Using this identity:
+
+$$\sum_{j \neq i}^N (\pi_{ij} - \pi_i \pi_j) = (n-1)\pi_i - \pi_i (n - \pi_i) = -\pi_i(1 - \pi_i)$$
+
+Substituting $\pi_i(1 - \pi_i) = -\sum_{j \neq i}^N (\pi_{ij} - \pi_i \pi_j)$ into the theoretical HT variance formula allows us to group terms into squared differences:
+
+$$\text{Var}_{SYG}(\hat{Y}_{HT}) = -\frac{1}{2} \sum_{i=1}^N \sum_{j \neq i}^N (\pi_{ij} - \pi_i \pi_j) \left( \frac{Y_i}{\pi_i} - \frac{Y_j}{\pi_j} \right)^2 \quad \blacksquare$$
+
+</div>
+</details>
+
+The corresponding **Sen-Yates-Grundy sample variance estimator** is:
+
+$$\hat{V}_{SYG}(\hat{Y}_{HT}) = -\frac{1}{2} \sum_{i=1}^n \sum_{j \neq i}^n \frac{\pi_{ij} - \pi_i \pi_j}{\pi_{ij}} \left( \frac{y_i}{\pi_i} - \frac{y_j}{\pi_j} \right)^2$$
+
+<div class="equation-box">
+<div class="equation-title">Comparison: HT vs. Sen-Yates-Grundy Variance Estimators</div>
+
+* **Condition for Non-Negativity:** The SYG estimator $\hat{V}_{SYG}$ is **guaranteed to be non-negative** for every sample realization whenever $\pi_{ij} \le \pi_i \pi_j$ for all $i \neq j$. This condition holds for SRSWOR and most well-behaved fixed-size sampling designs.
+
+* **Stability:** $\hat{V}_{SYG}$ is generally more stable and exhibits lower variance than $\hat{V}_{HT}$ because it is constructed from weighted pairwise differences $(y_i/\pi_i - y_j/\pi_j)^2$.
+
+* **Applicability:** SYG requires a fixed sample size design ($n = \text{const}$). For variable sample size designs, the classical HT variance estimator must be used.
+
+</div>
+
+---
+
+# Unifying Sampling Designs Under HT Theory
+
+The Horvitz-Thompson formulation automatically specializes to standard estimators across traditional sampling schemes.
+
+## Design 1: Simple Random Sampling Without Replacement (SRSWOR)
+
+* **Design Rule:** Every sample of size $n$ from $N$ has equal probability $\binom{N}{n}^{-1}$.
+
+* **Inclusion Probability:** $\pi_i = \frac{\binom{N-1}{n-1}}{\binom{N}{n}} = \frac{n}{N}$.
+
+* **HT Estimator:**
+  $$\hat{Y}_{HT} = \sum_{i=1}^n \frac{y_i}{n/N} = \frac{N}{n} \sum_{i=1}^n y_i = N \bar{y}$$
+
+## Design 2: Stratified Random Sampling
+
+* **Design Rule:** Population is divided into $K$ non-overlapping strata of size $M_h$ ($\sum_{h=1}^K M_h = N$). An SRSWOR of size $m_h$ is independently drawn from each stratum $h$.
+
+* **Inclusion Probability:** For unit $j$ in stratum $h$, $\pi_{(h,j)} = \frac{m_h}{M_h}$.
+
+* **HT Estimator:**
+  $$\hat{Y}_{HT} = \sum_{h=1}^K \sum_{j=1}^{m_h} \frac{y_{(h,j)}}{\pi_{(h,j)}} = \sum_{h=1}^K \frac{M_h}{m_h} \sum_{j=1}^{m_h} y_{(h,j)} = \sum_{h=1}^K M_h \bar{y}_h$$
+
+* **HT Population Mean:**
+  $$\hat{\bar{Y}}_{HT} = \frac{1}{N}\sum_{h=1}^K M_h \bar{y}_h = \sum_{h=1}^K W_h \bar{y}_h \quad \text{where } W_h = \frac{M_h}{N}$$
+
+## Design 3: Single-Stage Cluster Sampling
+
+* **Design Rule:** Population consists of $N$ primary clusters, each containing $M_i$ secondary elements. An SRSWOR of $n$ clusters is sampled, and **all** $M_i$ elements in sampled clusters are measured.
+
+* **Inclusion Probability:** For element $j$ in cluster $i$, $\pi_{(i,j)} = P(\text{Cluster } i \text{ sampled}) = \frac{n}{N}$.
+
+* **HT Estimator:**
+  $$\hat{Y}_{HT} = \sum_{i=1}^n \sum_{j=1}^{M_i} \frac{y_{(i,j)}}{n/N} = \frac{N}{n} \sum_{i=1}^n M_i \bar{y}_i$$
+
+* **Means:**
+  * *Per Cluster:* $\hat{\bar{Y}}_{\text{per cluster}} = \frac{1}{n}\sum_{i=1}^n M_i \bar{y}_i$
+  * *Per Element:* $\hat{\bar{Y}}_{\text{per element}} = \frac{N}{n} \sum_{i=1}^n \left(\frac{M_i}{M_{\text{pop}}}\right) \bar{y}_i$, where $M_{\text{pop}} = \sum_{i=1}^N M_i$.
+
+## Design 4: Two-Stage Sampling
+
+* **Design Rule:** First stage draws $n$ PSUs out of $N$ via SRSWOR. Second stage draws an SRSWOR of $m_i$ SSUs out of $M_i$ within each selected PSU $i$.
+
+* **Inclusion Probability:** By independence across stages:
+  $$\pi_{(i,j)} = P(Z_i = 1) \times P(I_{(i,j)} = 1 \mid Z_i = 1) = \left(\frac{n}{N}\right) \times \left(\frac{m_i}{M_i}\right)$$
+
+* **HT Estimator:**
+  $$\hat{Y}_{HT} = \sum_{i=1}^n \sum_{j=1}^{m_i} \frac{y_{(i,j)}}{\left(\frac{n}{N}\right)\left(\frac{m_i}{M_i}\right)} = \frac{N}{n} \sum_{i=1}^n M_i \left( \frac{1}{m_i} \sum_{j=1}^{m_i} y_{(i,j)} \right) = \frac{N}{n} \sum_{i=1}^n M_i \bar{y}_i$$
+
+<details class="proof-box">
+<summary><b>Proof: Unbiasedness in Two-Stage Sampling via Iterated Expectations</b></summary>
+<div class="proof-body">
+
+Let $Z_i \in \{0,1\}$ indicate PSU selection and $I_{(i,j)} \in \{0,1\}$ indicate SSU selection within PSU $i$. 
+
+First, evaluate the conditional expectation of $\bar{y}_i$ given $Z_i$:
+
+$$E(\bar{y}_i \mid Z_i) = E\left( \frac{1}{m_i} \sum_{j=1}^{M_i} I_{(i,j)} Y_{(i,j)} \,\,\Bigg\vert{}\,\, Z_i \right) = \frac{1}{m_i} \sum_{j=1}^{M_i} E(I_{(i,j)} \mid Z_i) Y_{(i,j)}$$
+
+From the conditional probability distribution $P(I_{(i,j)} = 1 \mid Z_i = 1) = \frac{m_i}{M_i}$ and $P(I_{(i,j)} = 1 \mid Z_i = 0) = 0$, we have $E(I_{(i,j)} \mid Z_i) = \frac{m_i}{M_i} Z_i$.
+
+$$E(\bar{y}_i \mid Z_i) = \frac{1}{m_i} \sum_{j=1}^{M_i} \left(\frac{m_i}{M_i} Z_i\right) Y_{(i,j)} = Z_i \bar{Y}_i$$
+
+Now applying the law of iterated expectations $E(\cdot) = E_Z[E(\cdot \mid Z)]$:
+
+$$E\left( \frac{N}{n} \sum_{i=1}^n M_i \bar{y}_i \right) = E\left( \frac{N}{n} \sum_{i=1}^N Z_i M_i \bar{y}_i \right) = \frac{N}{n} \sum_{i=1}^N M_i E\left[ Z_i E(\bar{y}_i \mid Z_i) \right]$$
+
+Since $Z_i^2 = Z_i$:
+
+$$E\left( \frac{N}{n} \sum_{i=1}^n M_i \bar{y}_i \right) = \frac{N}{n} \sum_{i=1}^N M_i E(Z_i) \bar{Y}_i = \frac{N}{n} \sum_{i=1}^N M_i \left(\frac{n}{N}\right) \bar{Y}_i = \sum_{i=1}^N M_i \bar{Y}_i = \sum_{i=1}^N \sum_{j=1}^{M_i} Y_{(i,j)} \quad \blacksquare$$
+
+</div>
+</details>
+
+## Design 5: Probability Proportional to Size (PPS / $\pi$PS) Sampling
+
+When positive auxiliary measure of size $X_i > 0$ (e.g., hospital bed count, clinic patient volume) is known for all units $i \in U$, we can design an unequal probability scheme where first-order inclusion probabilities are proportional to $X_i$:
+
+$$\pi_i = n \frac{X_i}{\sum_{k=1}^N X_k} = n \frac{X_i}{X_{\text{total}}}$$
+
+* **Efficiency Principle:** If the response variable $Y_i$ is roughly proportional to $X_i$ (i.e., $Y_i \approx c X_i$), then the ratio $Y_i / \pi_i \approx c X_{\text{total}} / n$ is nearly constant across all units.
+
+* **Zero Variance Ideal:** If $Y_i = c X_i$ perfectly for all $i$, then $\text{Var}(\hat{Y}_{HT}) = 0$. PPS sampling achieves massive variance reduction over equal-probability SRSWOR whenever $Y$ and $X$ are strongly correlated.
+
+---
+
+# Practical Implementation in R
+
+We verify Horvitz-Thompson estimation using R across two settings: (1) Stratified sampling compared against the production `survey` package, and (2) Unequal Probability / PPS Sampling demonstrating HT vs. SYG variance estimation.
+
+```{r survey-simulation}
+# Load required libraries
+suppressPackageStartupMessages(library(survey))
+suppressPackageStartupMessages(library(sampling))
+
+set.seed(2026)
+
+# ==============================================================================
+# PART 1: Stratified Sampling & Verification via `survey` Package
+# ==============================================================================
+N_strata <- 3
+M_h <- c(1000, 1500, 500) # Population stratum sizes
+N_pop <- sum(M_h)         # Total N = 3000
+
+pop_data <- data.frame(
+  stratum = factor(rep(1:N_strata, times = M_h)),
+  y = c(rnorm(M_h[1], mean = 50, sd = 10),
+        rnorm(M_h[2], mean = 75, sd = 15),
+        rnorm(M_h[3], mean = 30, sd = 5))
+)
+
+true_total <- sum(pop_data$y)
+true_mean  <- mean(pop_data$y)
+
+cat("=== PART 1: STRATIFIED SAMPLING ===\n")
+cat("True Population Total:", round(true_total, 2), "\n")
+cat("True Population Mean: ", round(true_mean, 2), "\n\n")
+
+# Draw Stratified Sample
+m_h <- c(50, 75, 25) # Sample sizes per stratum
+
+sample_units <- unlist(lapply(1:N_strata, function(h) {
+  idx <- which(pop_data$stratum == h)
+  sample(idx, size = m_h[h], replace = FALSE)
+}))
+
+sample_data <- pop_data[sample_units, ]
+
+# Compute Horvitz-Thompson weights (1 / pi_i)
+sample_data$M_h <- M_h[as.numeric(sample_data$stratum)]
+sample_data$m_h <- m_h[as.numeric(sample_data$stratum)]
+sample_data$pi_i <- sample_data$m_h / sample_data$M_h
+sample_data$ht_weight <- 1 / sample_data$pi_i
+
+# Manual Horvitz-Thompson Estimations
+ht_total_manual <- sum(sample_data$y * sample_data$ht_weight)
+ht_mean_manual  <- ht_total_manual / N_pop
+
+cat("--- Manual Horvitz-Thompson Calculations ---\n")
+cat("HT Estimated Total:", round(ht_total_manual, 2), "\n")
+cat("HT Estimated Mean: ", round(ht_mean_manual, 2), "\n\n")
+
+# Verification via `survey` Package
+strat_design <- svydesign(
+  id = ~1,
+  strata = ~stratum,
+  fpc = ~pi_i,
+  weights = ~ht_weight,
+  data = sample_data
+)
+
+ht_total_survey <- svytotal(~y, strat_design)
+ht_mean_survey  <- svymean(~y, strat_design)
+
+cat("--- Survey Package Outputs ---\n")
+print(ht_total_survey)
+print(ht_mean_survey)
+
+# ==============================================================================
+# PART 2: Probability Proportional to Size (PPS) Sampling & Variance Comparison
+# ==============================================================================
+cat("\n=== PART 2: PPS SAMPLING & SYG VARIANCE ESTIMATION ===\n")
+
+N_pps <- 200
+n_pps <- 20
+
+# Auxiliary variable X (e.g., hospital beds) and health outcome Y (e.g., patient visits)
+X_aux <- runif(N_pps, min = 10, max = 150)
+Y_val <- 5 * X_aux + rnorm(N_pps, mean = 0, sd = 30)
+
+pps_pop <- data.frame(id = 1:N_pps, x = X_aux, y = Y_val)
+true_pps_total <- sum(pps_pop$y)
+
+# Calculate inclusion probabilities proportional to size (pi_i = n * X_i / sum(X))
+pik <- inclusionprobabilities(pps_pop$x, n_pps)
+
+# Draw sample using Systematic PPS Sampling
+s_pps_idx <- UPsystematic(pik)
+pps_sample <- pps_pop[s_pps_idx == 1, ]
+pik_sample <- pik[s_pps_idx == 1]
+
+# HT Estimator for Total under PPS
+ht_pps_total <- sum(pps_sample$y / pik_sample)
+
+# Compute Joint Inclusion Probabilities Matrix (pi_ij) using `UPsystematicpi2`
+pikl_mat <- UPsystematicpi2(pik)
+pikl_sample <- pikl_mat[s_pps_idx == 1, s_pps_idx == 1]
+
+# Sen-Yates-Grundy Variance Estimation using `varHT` (method = 2)
+syg_var_est <- varHT(pps_sample$y, pikl_sample, method = 2)
+
+cat("True Population Total:        ", round(true_pps_total, 2), "\n")
+cat("PPS HT Estimated Total:       ", round(ht_pps_total, 2), "\n")
+cat("Sen-Yates-Grundy Standard Error:", round(sqrt(syg_var_est), 2), "\n")
+```
+
+# Basu's Circus Elephant: A Cautionary Tale
+
+Formulated by Debabrata Basu (1971), this famous thought experiment demonstrates how design-based unbiasedness can break down in practice, producing absurd point estimates when inclusion probabilities do not align with the target variable's magnitude.
+
+## The Setup
+
+A circus statistician wants to estimate the total weight $Y = \sum_{i=1}^{N} Y_i$ of a herd of $N = 50$ elephants. 
+
+The circus owner knows that Elephant 1, named Sambo, is a famous elephant whose weight is known beforehand to be $Y_1 = 5,000\text{ lbs}$. The statistician decides to sample $n = 1$ elephant to estimate the herd's total weight using a design-based approach.
+
+To be helpful, the statistician constructs an unequal probability sampling design:
+
+* **Sambo (Unit 1):** Drawn with probability $p_1 = \pi_1 = 0.99$.
+
+* **Other Elephants (Units $2, \ldots, 50$):** Drawn with equal probability $p_i = \pi_i = \frac{0.01}{49} \approx 0.000204$ for each $i \in \{2, \ldots, 50\}$.
+
+Notice that $\sum_{i=1}^{50} \pi_i = 0.99 + 49 \left(\frac{0.01}{49}\right) = 1.0$, satisfying valid sampling design requirements.
+
+---
+
+## The Outcomes
+
+When the sample of size $n = 1$ is drawn, only two realizations are possible under the Horvitz-Thompson estimator $\hat{Y}_{HT} = \frac{y_i}{\pi_i}$:
+
+### Realization A: Sambo is Selected (Probability = 0.99)
+
+Sambo is weighed, yielding $y_1 = 5,000\text{ lbs}$. The HT estimate for the total herd weight is:
+
+$$\hat{Y}_{HT} = \frac{5,000}{0.99} \approx 5,050.51\text{ lbs}$$
+
+> **Interpretation:** Since Sambo weighs $5,000\text{ lbs}$, estimating the total herd weight at $5,050.51\text{ lbs}$ implies that the remaining 49 elephants weigh a combined $50.51\text{ lbs}$ (about $1\text{ lb}$ each).
+
+### Realization B: Any Other Elephant is Selected (Probability = 0.01)
+
+Suppose Elephant 2 is selected with an actual weight of $Y_2 = 3,000\text{ lbs}$. The HT estimate for the total herd weight is:
+
+$$\hat{Y}_{HT} = \frac{3,000}{\left(\frac{0.01}{49}\right)} = 3,000 \times 4,900 = 14,700,000\text{ lbs}$$
+
+> **Interpretation:** Estimating total weight at $14.7\text{ million lbs}$ implies that each elephant in the herd weighs an average of $294,000\text{ lbs}$.
+
+---
+
+## The Theoretical Paradox
+
+<details class="proof-box">
+<summary><b>Mathematical Proof: Unbiasedness of Basu's HT Estimator</b></summary>
+<div class="proof-body">
+
+Despite producing ridiculous numbers in every single realization, the estimator remains strictly **unbiased** under sample space repetition:
+
+$$E(\hat{Y}_{HT}) = \sum_{i=1}^{50} \pi_i \left( \frac{Y_i}{\pi_i} \right)$$
+
+$$E(\hat{Y}_{HT}) = (0.99)\left(\frac{Y_1}{0.99}\right) + \sum_{i=2}^{50} \left(\frac{0.01}{49}\right)\left(\frac{Y_i}{\frac{0.01}{49}}\right)$$
+
+$$E(\hat{Y}_{HT}) = Y_1 + \sum_{i=2}^{50} Y_i = \sum_{i=1}^{50} Y_i = Y \quad \blacksquare$$
+
+</div>
+</details>
+
+While $E(\hat{Y}_{HT}) = Y$ holds, the sampling variance $\text{Var}(\hat{Y}_{HT})$ is astronomically large. In practice, a statistician gets only **one** sample realization, and in Basu's setup, **100% of realized outcomes are contextually impossible**.
+
+<div class="pde-box">
+<div class="equation-title">Core Takeaways for Survey Design</div>
+
+* **Optimal Design Weighting:** The HT estimator performs exceptionally well when inclusion probabilities are proportional to size ($\pi_i \propto Y_i$). It fails when inverse inclusion weights ($1/\pi_i$) are extreme and uncorrelated with the size of $Y_i$.
+
+* **Design Unbiasedness vs. Practical Utility:** Unbiasedness is an average property across hypothetical repeated samples. An unbiased estimator with extreme conditional variance can be useless for real-world decision-making.
+
+* **Incorporate Auxiliary Information:** If known baseline quantities exist (such as Sambo's weight $Y_1$), use model-assisted, difference, or calibration estimators rather than forcing unequal design weights into an unassisted HT formula:
+  $$\hat{Y}_{\text{diff}} = Y_1 + \hat{Y}_{\text{remaining}}$$
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Target all proof-box expandable details
+  document.querySelectorAll('details.proof-box').forEach(details => {
+    const summary = details.querySelector('summary');
+    const body = details.querySelector('.proof-body') || details;
+
+    // Create container and button
+    const container = document.createElement('div');
+    container.className = 'proof-close-container';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'proof-close-btn';
+    closeBtn.type = 'button';
+    closeBtn.innerHTML = '&#9650; Collapse Box'; // Upward triangle symbol
+
+    // Handle smooth collapse without page jumping
+    closeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      // 1. Smoothly scroll the top summary header into view
+      summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // 2. Close the box after scrolling completes
+      setTimeout(() => {
+        details.open = false;
+      }, 150);
+    });
+
+    container.appendChild(closeBtn);
+    body.appendChild(container);
+  });
+});
+</script>
+

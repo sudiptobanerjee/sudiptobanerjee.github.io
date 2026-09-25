@@ -1,0 +1,826 @@
+---
+title: "Feller-Style Combinatorial Probability in Finite Sample Spaces"
+author: "Sudipto Banerjee<br><em>Department of Biostatistics<br>Department of Statistics & Data Science<br>Institute of the Environment & Sustainability<br>UCLA</em>"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    toc_depth: 3
+    number_sections: true
+    theme: flatly
+    self_contained: true
+format:
+  html:
+    page-layout: full
+    fontsize: 14.5px
+    toc: true
+    toc-location: left
+    toc-expand: 1
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
+    code-copy: hover
+    embed-resources: true
+---
+
+<div style="display:none;">
+$$\newcommand{\T}{\mathrm{\scriptscriptstyle T}}$$
+</div>
+
+<style>
+.main-container {
+  margin-left: 280px !important;
+  max-width: 95% !important;
+}
+
+div.tocify {
+  width: 250px !important;
+}
+
+#quarto-document-content {
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+  max-width: 1500px !important;
+}
+
+li > p {
+  margin-bottom: 0px !important;
+}
+li > ul {
+  margin-top: 2px !important;
+}
+
+details.proof-box {
+  margin-top: 1em;
+  margin-bottom: 1.2em;
+  padding: 0.8em 1.2em;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
+#quarto-content details.proof-box {
+  margin-left: -2em;
+  margin-right: -2em;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+
+details.proof-box summary {
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  outline: none;
+}
+
+details.proof-box summary:hover {
+  color: #2563eb;
+}
+
+details.proof-box[open] summary {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5em;
+  margin-bottom: 0.8em;
+}
+
+.proof-body {
+  padding-top: 0.4em;
+  line-height: 1.6;
+}
+
+.pde-box {
+  background-color: #f0f9ff;
+  border-left: 4px solid #0284c7;
+  padding: 1em 1.2em;
+  margin: 1.2em 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.equation-box {
+  background-color: #f0fdf4;
+  border-left: 4px solid #16a34a;
+  padding: 1em 1.2em;
+  margin: 1.2em 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.equation-title {
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.4em;
+  font-size: 0.95em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Bottom Collapse Button Styling */
+.proof-close-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.2em;
+  padding-top: 0.6em;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.proof-close-btn {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.85em;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.proof-close-btn:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE, 
+  message = FALSE,
+  fig.width = 9,
+  fig.height = 5.5,
+  fig.align = "center"
+)
+```
+
+# Introduction: William Feller's Classical Combinatorial Framework
+
+In Lecture 1, we established the axiomatic probability space $(\Omega, \mathcal{F}, P)$ for finite sample spaces and defined sampling designs as probability measures on collections of subsets. We now turn to William Feller's classic approach to probability (from *An Introduction to Probability Theory and Its Applications*, Vol. 1): evaluating probabilities in finite sample spaces where elementary outcomes are **equally likely**.
+
+Under equal likelihood, if $\Omega = \{\omega_1, \dots, \omega_M\}$ and $p(\{\omega_m\}) = 1/M$ for all $m$, the probability of an event $A \subseteq \Omega$ reduces purely to counting:
+
+$$P(A) = \frac{\vert{}A\vert{}}{\vert{}\Omega\vert{}} = \frac{\text{Number of favorable outcomes}}{\text{Total number of possible outcomes}}$$
+
+This lecture explores combinatorial counting techniques, occupancy models, general hypergeometric probabilities in multi-category selections, and the foundational relationship between simple random sampling without replacement (SRSWOR) and with replacement (SRSWR).
+
+---
+
+# Classical Counting Problems from Feller
+
+## The Shoes/Socks Selection Problem
+
+A classic problem introduced by Feller concerns selecting items from matched pairs.
+
+::: {.equation-box}
+::: {.equation-title}
+Problem Statement: Feller's Sock/Shoe Matching Problem
+:::
+A closet contains $N$ distinct pairs of shoes (or socks), giving a total of $2N$ individual shoes. Suppose $r$ shoes are drawn at random without replacement, where $r \le N$. 
+
+What is the probability $P(E_r)$ that among the $r$ selected shoes, there is **no complete matching pair**?
+:::
+
+To compute $P(E_r)$, we enumerate the total and favorable outcomes:
+
+1. **Total Sample Space Size ($\vert{}\Omega\vert{}$):** The number of ways to choose any $r$ shoes from $2N$ available shoes without replacement:
+   $$\vert{}\Omega\vert{} = \binom{2N}{r}$$
+
+2. **Favorable Outcomes ($\vert{}E_r\vert{}$):** To avoid selecting any complete pair:
+   * First choose $r$ distinct pairs out of the $N$ available pairs: $\binom{N}{r}$ ways.
+   * From each of the $r$ chosen pairs, select exactly $1$ shoe (either left or right): $2^1 = 2$ choices per pair, resulting in $2^r$ ways.
+   
+   $$\vert{}E_r\vert{} = \binom{N}{r} 2^r$$
+
+Thus, the probability of selecting no matching pairs is:
+
+$$P(E_r) = \frac{\binom{N}{r} 2^r}{\binom{2N}{r}}$$
+
+<details class="proof-box">
+<summary>Algebraic Simplification and Asymptotic Behavior</summary>
+<div class="proof-body">
+Expanding the binomial coefficients explicitly:
+
+$$P(E_r) = \frac{\frac{N!}{r!(N-r)!} 2^r}{\frac{(2N)!}{r!(2N-r)!}} = \frac{N! (2N-r)!}{(N-r)! (2N)!} 2^r$$
+
+We rewrite the ratio of factorials as product ratios:
+
+$$P(E_r) = 2^r \prod_{j=0}^{r-1} \frac{N - j}{2N - j} = \prod_{j=0}^{r-1} \frac{2N - 2j}{2N - j} = \prod_{j=0}^{r-1} \left( 1 - \frac{j}{2N - j} \right)$$
+
+When $N$ is large relative to $r$, applying the approximation $1 - x \approx e^{-x}$ yields:
+
+$$P(E_r) \approx \prod_{j=0}^{r-1} \exp\left( -\frac{j}{2N} \right) = \exp\left( -\frac{1}{2N} \sum_{j=0}^{r-1} j \right) = \exp\left( -\frac{r(r-1)}{4N} \right)$$
+
+This expression reveals the classic birthday-problem phenomenon: even for moderate sample sizes $r \approx \sqrt{N}$, the probability of encountering at least one matching pair becomes substantial.
+</div>
+</details>
+
+---
+
+# Urn Models and Card Games: General Hypergeometric Probabilities
+
+Sampling cards from a standard deck or drawing balls from an urn with multiple colors generalizes the two-outcome sampling design to $C$ distinct categories.
+
+## Multivariate Hypergeometric Distribution
+
+Suppose an urn contains $N$ total items partitioned into $C$ mutually exclusive categories with population counts $N_1, N_2, \dots, N_C$, such that:
+
+$$\sum_{c=1}^C N_c = N$$
+
+A sample of size $n$ is drawn at random **without replacement** (SRSWOR). Let $X_c$ denote the number of items in the sample belonging to category $c$.
+
+::: {.equation-box}
+::: {.equation-title}
+Definition 2.1: Multivariate Hypergeometric Probability Function
+:::
+The joint probability mass function of $\mathbf{X} = (X_1, X_2, \dots, X_C)^\T$ is given by:
+$$P(X_1 = x_1, X_2 = x_2, \dots, X_C = x_C) = \frac{\prod_{c=1}^C \binom{N_c}{x_c}}{\binom{N}{n}}$$
+defined for non-negative integers $x_c$ satisfying $0 \le x_c \le N_c$ and $\sum_{c=1}^C x_c = n$.
+:::
+
+## Combinatorial Examples in Poker and Bridge
+
+### Example 1: Poker Hand Probabilities (Full House)
+
+::: {.pde-box}
+**Poker Example: Probability of a Full House**  
+Consider dealing a $5$-card hand ($n = 5$) from a standard $52$-card deck ($N = 52$). The deck contains $C = 13$ ranks, with $N_c = 4$ cards per rank.
+
+A Full House consists of $3$ cards of one rank and $2$ cards of another rank:
+
+$$P(\text{Full House}) = \frac{\binom{13}{1} \binom{4}{3} \times \binom{12}{1} \binom{4}{2}}{\binom{52}{5}} = \frac{13 \times 4 \times 12 \times 6}{2,598,960} = \frac{3,744}{2,598,960} \approx 0.001441$$
+:::
+
+### Example 2: Bridge Hand Suit Distributions (4-4-3-2 Shape)
+
+In contract bridge, a player is dealt a $13$-card hand ($n = 13$) from a standard deck ($N = 52$) partitioned into $C = 4$ suits of $N_1 = N_2 = N_3 = N_4 = 13$ cards each.
+
+::: {.pde-box}
+**Bridge Example 1: Probability of a 4-4-3-2 Suit Distribution**  
+Calculate the probability of being dealt a hand with $4$ cards in two suits, $3$ cards in a third suit, and $2$ cards in the remaining suit.
+
+1. **Specific Suit Assignment:** The probability of holding $4$ Spades, $4$ Hearts, $3$ Diamonds, and $2$ Clubs is given by the multivariate hypergeometric formula:
+   $$P(\text{Sp}=4, \text{He}=4, \text{Di}=3, \text{Cl}=2) = \frac{\binom{13}{4} \binom{13}{4} \binom{13}{3} \binom{13}{2}}{\binom{52}{13}}$$
+
+2. **Counting Suit Assignments (Permutations vs. Combinations):** To find the total number of ways to assign the shape $\{4, 4, 3, 2\}$ across the $4$ named suits (Spades, Hearts, Diamonds, Clubs), we can use two equivalent counting perspectives:
+   * **Permutation of Suits (Multinomial Coefficient):** Viewing this as arranging $4$ suit slots where two suits receive $4$ cards, one receives $3$ cards, and one receives $2$ cards:
+     $$\frac{4!}{2! \, 1! \, 1!} = \frac{24}{2 \times 1 \times 1} = 12$$
+     *Explanation from basic counting:* There are $4! = 24$ total permutations of the $4$ suits. However, because $2$ suits have identical card counts ($4$ cards each), swapping those two suits does not create a distinct distribution shape. We divide by $2!$ to eliminate this double-counting, while $1!$ and $1!$ account for the unique suit lengths ($3$ and $2$ cards).
+   * **Alternative Combination ("Choosing") Argument:** 
+     * Select $2$ suits out of $4$ to hold $4$ cards each: $\binom{4}{2} = 6$ ways.
+     * From the remaining $2$ suits, select $1$ suit to hold $3$ cards: $\binom{2}{1} = 2$ ways.
+     * The remaining $1$ suit automatically holds $2$ cards: $\binom{1}{1} = 1$ way.
+     
+     Multiplying these sequential choices gives:
+     $$\binom{4}{2} \times \binom{2}{1} \times \binom{1}{1} = 6 \times 2 \times 1 = 12 \text{ ways}$$
+
+Combining these gives the total probability of receiving any $4\text{-}4\text{-}3\text{-}2$ hand:
+$$P(\text{4-4-3-2 Distribution}) = 12 \times \frac{\binom{13}{4}^2 \binom{13}{3} \binom{13}{2}}{\binom{52}{13}} = 12 \times \frac{(715)^2 \times 286 \times 78}{635,013,559,600} \approx 0.21551$$
+Thus, $4\text{-}4\text{-}3\text{-}2$ is the most common hand distribution in contract bridge, occurring in roughly $21.55\%$ of all deals.
+:::
+
+### Example 3: Bridge High Honor Cards Configuration
+
+::: {.pde-box}
+**Bridge Example 2: Holding Specific Honors (Aces and Kings)**  
+What is the probability that a $13$-card bridge hand contains **exactly 2 Aces and exactly 2 Kings**?
+
+Partition the $52$-card deck into $C = 3$ mutually exclusive categories:
+
+* Category 1: Aces ($N_1 = 4$)
+* Category 2: Kings ($N_2 = 4$)
+* Category 3: Other cards ($N_3 = 44$)
+
+We require selecting $x_1 = 2$ Aces, $x_2 = 2$ Kings, and $x_3 = 13 - (2 + 2) = 9$ other cards:
+
+$$P(X_{\text{Ace}} = 2, X_{\text{King}} = 2) = \frac{\binom{4}{2} \binom{4}{2} \binom{44}{9}}{\binom{52}{13}}$$
+
+Evaluating the binomial coefficients:
+
+$$P(X_{\text{Ace}} = 2, X_{\text{King}} = 2) = \frac{6 \times 6 \times 707,234,155}{635,013,559,600} = \frac{25,460,429,580}{635,013,559,600} \approx 0.04009$$
+
+There is approximately a $4.01\%$ probability of being dealt exactly $2$ Aces and $2$ Kings in a bridge hand.
+:::
+
+---
+
+# SRSWOR vs. SRSWR: Hypergeometric vs. Binomial
+
+We now compare the two fundamental urn sampling mechanisms when selecting from a two-color population.
+
+Suppose an urn contains $N$ total balls:
+
+* $M$ Red balls (Category 1)
+* $N - M$ White balls (Category 2)
+
+Let $p = M/N$ denote the population proportion of red balls. We draw a sample of size $n$ and record $X$, the total number of red balls observed.
+
+## SRSWOR: The Hypergeometric Distribution
+
+When sampling **without replacement**, successive draws are dependent. The probability mass function of $X \sim \text{Hypergeometric}(N, M, n)$ is:
+
+$$P(X = k) = \frac{\binom{M}{k} \binom{N-M}{n-k}}{\binom{N}{n}}, \quad \max(0, n - (N-M)) \le k \le \min(n, M)$$
+
+The mean and variance of $X$ under SRSWOR are:
+
+$$E[X] = n \left(\frac{M}{N}\right) = np$$
+
+$$\text{Var}_{\text{WOR}}(X) = n p (1-p) \left( \frac{N-n}{N-1} \right)$$
+
+The factor $\frac{N-n}{N-1}$ is the **Finite Population Correction (FPC)** factor. Because $\frac{N-n}{N-1} < 1$ for $n > 1$, sampling without replacement strictly reduces variance compared to sampling with replacement.
+
+## SRSWR: The Binomial Distribution
+
+When sampling **with replacement**, each draw is an independent Bernoulli trial with constant success probability $p = M/N$. The probability mass function of $X \sim \text{Binomial}(n, p)$ is:
+
+$$P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}, \quad k \in \{0, 1, \dots, n\}$$
+
+The mean and variance under SRSWR are:
+
+$$E[X] = np$$
+
+$$\text{Var}_{\text{WR}}(X) = n p (1-p)$$
+
+---
+
+# Asymptotic Equivalence: Convergence of Hypergeometric to Binomial
+
+When the population size $N$ is large relative to the sample size $n$, removing $n$ units without replacement has a negligible impact on the composition of the remaining population. Thus, SRSWOR behaves like SRSWR in the limit.
+
+::: {.equation-box}
+::: {.equation-title}
+Theorem 2.1: Hypergeometric Limit Theorem
+:::
+Let $N \to \infty$ and $M \to \infty$ such that the population proportion converges to a constant $p \in (0, 1)$:
+$$\lim_{N \to \infty} \frac{M}{N} = p$$
+Then for any fixed sample size $n$ and fixed $k \in \{0, 1, \dots, n\}$:
+$$\lim_{N \to \infty} \frac{\binom{M}{k} \binom{N-M}{n-k}}{\binom{N}{n}} = \binom{n}{k} p^k (1-p)^{n-k}$$
+:::
+
+<details class="proof-box">
+<summary>Proof: Rigorous Asymptotic Derivation</summary>
+<div class="proof-body">
+Expand the hypergeometric probability using factorials:
+
+$$P(X = k) = \frac{\binom{M}{k}\binom{N-M}{n-k}}{\binom{N}{n}} = \frac{M!}{k!(M-k)!} \cdot \frac{(N-M)!}{(n-k)!(N-M-n+k)!} \cdot \frac{n!(N-n)!}{N!}$$
+
+Rearrange terms by grouping the combinatorics $\binom{n}{k} = \frac{n!}{k!(n-k)!}$ separately from the population ratios:
+
+$$P(X = k) = \binom{n}{k} \cdot \frac{M!}{(M-k)!} \cdot \frac{(N-M)!}{(N-M-n+k)!} \cdot \frac{(N-n)!}{N!}$$
+
+Express each factorial ratio as a product of $k$ or $n-k$ terms:
+
+$$P(X = k) = \binom{n}{k} \cdot \frac{\prod_{j=0}^{k-1} (M - j) \cdot \prod_{j=0}^{n-k-1} (N - M - j)}{\prod_{j=0}^{n-1} (N - j)}$$
+
+Divide both numerator and denominator by $N^n = N^k \cdot N^{n-k}$:
+
+$$P(X = k) = \binom{n}{k} \cdot \frac{\left( \prod_{j=0}^{k-1} \frac{M - j}{N} \right) \left( \prod_{j=0}^{n-k-1} \frac{N - M - j}{N} \right)}{\prod_{j=0}^{n-1} \frac{N - j}{N}}$$
+
+Examine the individual terms as $N \to \infty$ with $M/N \to p$:
+
+1. For each $j \in \{0, \dots, k-1\}$:
+   $$\lim_{N \to \infty} \frac{M - j}{N} = \lim_{N \to \infty} \left( \frac{M}{N} - \frac{j}{N} \right) = p$$
+   
+   Thus, the first numerator product converges to $p^k$.
+
+2. For each $j \in \{0, \dots, n-k-1\}$:
+   $$\lim_{N \to \infty} \frac{N - M - j}{N} = \lim_{N \to \infty} \left( 1 - \frac{M}{N} - \frac{j}{N} \right) = 1 - p$$
+   
+   Thus, the second numerator product converges to $(1-p)^{n-k}$.
+
+3. For each $j \in \{0, \dots, n-1\}$ in the denominator:
+   $$\lim_{N \to \infty} \frac{N - j}{N} = \lim_{N \to \infty} \left( 1 - \frac{j}{N} \right) = 1$$
+   
+   Thus, the denominator product converges to $1$.
+
+Combining these limits yields:
+
+$$\lim_{N \to \infty} P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}$$
+
+This completes the proof.
+</div>
+</details>
+
+::: {.pde-box}
+**Practical Sampling Rule:** When the **sampling fraction** $f = n/N \le 0.05$ (i.e., sampling $5\%$ or less of the total population), the FPC factor satisfies:
+$$\frac{N-n}{N-1} \approx 1 - f \ge 0.95$$
+In this regime, SRSWOR probabilities and variances are well approximated by SRSWR (Binomial) formulas, rendering the finite population constraint negligible.
+:::
+
+---
+
+# R Implementations and Numerical Experiments
+
+We now write an R script to verify the convergence of the Hypergeometric distribution to the Binomial distribution as $N$ grows, while keeping sample size $n = 10$ and proportion $p = 0.30$ fixed.
+
+**What this program demonstrates:**
+
+1. **Exact PMF Comparison Table:** It evaluates `dhyper()` vs. `dbinom()` across population sizes $N \in \{20, 50, 200, 2000\}$.
+2. **Variance Convergence:** It calculates the exact variance reduction due to the FPC factor $\frac{N-n}{N-1}$ and demonstrates convergence to $np(1-p)$.
+3. **Graphical Proof of Convergence:** It generates a multi-curve plot showing how the Hypergeometric PMF directly collapses onto the Binomial PMF as $N$ increases.
+
+```{r convergence-experiment}
+# Set parameters
+n <- 10
+p <- 0.30
+N_vec <- c(20, 50, 200, 2000)
+k_vals <- 0:n
+
+# Calculate Binomial PMF baseline (SRSWR limit)
+binom_pmf <- dbinom(k_vals, size = n, prob = p)
+
+# Construct comparison table for PMF values
+pmf_comparison <- data.frame(
+  k = k_vals,
+  Binomial_Limit = round(binom_pmf, 5)
+)
+
+# Loop over population sizes and add Hypergeometric PMFs
+for (N in N_vec) {
+  M <- round(N * p)
+  hyp_pmf <- dhyper(k_vals, m = M, n = N - M, k = n)
+  pmf_comparison[[paste0("Hyper_N_", N)]] <- round(hyp_pmf, 5)
+}
+
+cat("PMF Comparison across Increasing Population Sizes N (n = 10, p = 0.30):\n")
+print(pmf_comparison)
+
+# Variance comparison showing FPC effect
+var_df <- data.frame(
+  N = N_vec,
+  Sampling_Fraction = paste0(round(n / N_vec * 100, 1), "%"),
+  FPC = (N_vec - n) / (N_vec - 1),
+  Var_Hypergeometric = n * p * (1 - p) * ((N_vec - n) / (N_vec - 1)),
+  Var_Binomial = n * p * (1 - p)
+)
+
+cat("\nVariance Reduction and FPC Convergence:\n")
+print(var_df)
+
+# Plotting PMF convergence
+plot(k_vals, binom_pmf, type = "b", pch = 19, col = "black", lwd = 2.5,
+     ylim = c(0, max(binom_pmf) * 1.18),
+     xlab = "Number of Successes (k)", ylab = "Probability P(X = k)",
+     main = "Convergence of Hypergeometric PMF to Binomial PMF as N -> Infty")
+grid(col = "lightgray", lty = "dotted")
+
+colors <- c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3")
+pch_vec <- c(15, 17, 18, 4)
+lty_vec <- c(2, 3, 4, 5)
+
+for (i in seq_along(N_vec)) {
+  N <- N_vec[i]
+  M <- round(N * p)
+  hyp_pmf <- dhyper(k_vals, m = M, n = N - M, k = n)
+  lines(k_vals, hyp_pmf, type = "b", pch = pch_vec[i], col = colors[i], 
+        lty = lty_vec[i], lwd = 1.8, cex = 1.1)
+}
+
+legend("topright",
+       legend = c("Binomial (SRSWR Limit)", paste("Hypergeometric N =", N_vec)),
+       col = c("black", colors),
+       lty = c(1, lty_vec),
+       pch = c(19, pch_vec),
+       lwd = c(2.5, rep(1.8, length(N_vec))),
+       bg = "#f8fafc", box.col = "#cbd5e1", cex = 0.9)
+```
+
+---
+
+# Derivation of Inclusion Probabilities in SRSWOR and SRSWR
+
+A fundamental topic in sampling theory is determining the probability that a specific unit $i$ from a finite population $U = \{1, 2, \dots, N\}$ is included in a sample $S$ of size $n$. 
+
+Let $I_i$ denote the **sample inclusion indicator** for unit $i$:
+
+$$I_i = \begin{cases} 1 & \text{if unit } i \in S \\ 0 & \text{if unit } i \notin S \end{cases}$$
+
+The probability $\pi_i = P(I_i = 1)$ is called the **first-order inclusion probability** of unit $i$. Below, we derive $\pi_i$ under both Simple Random Sampling Without Replacement (SRSWOR) and Simple Random Sampling With Replacement (SRSWR) using first-principles combinatorial reasoning.
+
+---
+
+## Simple Random Sampling Without Replacement (SRSWOR)
+
+Under SRSWOR, a sample of $n$ distinct units is chosen at random without replacement from the $N$ population units. All possible samples of size $n$ are equally likely.
+
+### Derivation 1: Direct Combinatorial Counting (Unordered Samples)
+
+::: {.equation-box}
+::: {.equation-title}
+Method 1: Combination Counting
+:::
+To find $P(I_i = 1)$ for any fixed unit $i \in \{1, 2, \dots, N\}$:
+
+1. **Total Number of Possible Samples:** The number of ways to select an unordered sample of $n$ distinct units from $N$ population units is:
+   $$\binom{N}{n} = \frac{N!}{n!(N-n)!}$$
+
+2. **Favorable Samples Containing Unit $i$:** If unit $i$ must be present in the sample, its position is fixed. We are free to select the remaining $n-1$ sample units from the remaining $N-1$ population units:
+   $$\binom{N-1}{n-1} = \frac{(N-1)!}{(n-1)!(N-n)!}$$
+
+3. **Inclusion Probability:** Under equal likelihood, the ratio of favorable samples to total samples gives:
+   $$P(I_i = 1) = \frac{\binom{N-1}{n-1}}{\binom{N}{n}} = \frac{\frac{(N-1)!}{(n-1)!(N-n)!}}{\frac{N!}{n!(N-n)!}} = \frac{(N-1)!}{N!} \cdot \frac{n!}{(n-1)!} = \frac{n}{N}$$
+:::
+
+Thus, for every unit $i = 1, 2, \dots, N$, the inclusion probability in SRSWOR is simply $\pi_i = \frac{n}{N}$.
+
+---
+
+### Draw-by-Draw Analysis in SRSWOR
+
+It is instructive to distinguish the overall inclusion probability $\pi_i = P(I_i = 1)$ from the probability that unit $i$ appears on a **specific draw** $k$.
+
+Define the specific draw indicator $X_{ik}$ for $i \in \{1, \dots, N\}$ and $k \in \{1, \dots, n\}$ as:
+
+$$X_{ik} = \begin{cases} 1 & \text{if unit } i \text{ appears in the } k\text{-th draw of the sample} \\ 0 & \text{otherwise} \end{cases}$$
+
+::: {.pde-box}
+**Specific Draw Probability Theorem (SRSWOR)**  
+The probability that unit $i$ is selected on the $k$-th draw is equal to $\frac{1}{N}$ for every draw $k = 1, 2, \dots, n$.
+:::
+
+<details class="proof-box">
+<summary>Proof: Telescoping Conditional Product</summary>
+<div class="proof-body">
+For unit $i$ to be selected specifically on draw $k$, it must **not** be selected on draws $1, 2, \dots, k-1$, and then **must** be selected on draw $k$. 
+
+Applying the sequential probability rule across draws:
+
+$$\begin{aligned}
+P(X_{ik} = 1) &= \underbrace{\left(\frac{N-1}{N}\right)}_{\text{Not on draw 1}} \cdot \underbrace{\left(\frac{N-2}{N-1}\right)}_{\text{Not on draw 2}} \cdots \underbrace{\left(\frac{N-k+1}{N-k+2}\right)}_{\text{Not on draw } k-1} \cdot \underbrace{\left(\frac{1}{N-k+1}\right)}_{\text{Selected on draw } k} \cdot \underbrace{\left(\frac{N-k}{N-k}\dots \frac{N-n}{N-n}\right)}_{\text{Subsequent draws}}
+\end{aligned}$$
+
+Notice the telescoping cancellation across all intermediate numerators and denominators:
+
+$$P(X_{ik} = 1) = \frac{\cancel{N-1}}{N} \cdot \frac{\cancel{N-2}}{\cancel{N-1}} \cdot \frac{\cancel{N-3}}{\cancel{N-2}} \dots \frac{\cancel{N-k+1}}{\cancel{N-k+2}} \cdot \frac{1}{\cancel{N-k+1}} = \frac{1}{N}$$
+
+Thus, every single draw $k \in \{1, \dots, n\}$ has an identical probability $\frac{1}{N}$ of selecting unit $i$.
+</div>
+</details>
+
+---
+
+### Derivation 2: Alternative Inclusion Derivation via Mutually Exclusive Draw Events
+
+We can now re-derive $P(I_i = 1)$ using the specific draw probabilities $P(X_{ik} = 1) = \frac{1}{N}$.
+
+In SRSWOR, unit $i$ can appear **at most once** in the sample. Therefore, the events $\{X_{i1} = 1\}, \{X_{i2} = 1\}, \dots, \{X_{in} = 1\}$ are **mutually exclusive**.
+
+Since unit $i$ is included in the sample if and only if it is selected on draw 1, OR draw 2, ..., OR draw $n$:
+
+$$\{I_i = 1\} = \bigcup_{k=1}^n \{X_{ik} = 1\}$$
+
+By the finite additivity axiom for mutually exclusive events:
+
+$$P(I_i = 1) = P\left(\bigcup_{k=1}^n \{X_{ik} = 1\}\right) = \sum_{k=1}^n P(X_{ik} = 1) = \sum_{k=1}^n \frac{1}{N} = n \times \frac{1}{N} = \frac{n}{N}$$
+
+This confirms the result obtained from combination counting.
+
+---
+
+## Simple Random Sampling With Replacement (SRSWR)
+
+Under SRSWR, $n$ draws are conducted sequentially with replacement. On each draw, every unit in the population has an equal probability $\frac{1}{N}$ of being selected, independently of all other draws.
+
+### Derivation 1: Combinatorial Counting via Complement (Ordered Samples)
+
+::: {.equation-box}
+::: {.equation-title}
+Method 1: Counting Ordered Sequences
+:::
+1. **Total Number of Possible Ordered Samples:** Because drawing is done with replacement, each of the $n$ draws has $N$ possible outcomes, giving a total sample space size of:
+   $$|\Omega_{\text{WR}}| = N^n$$
+
+2. **Samples Excluding Unit $i$:** For unit $i$ **not** to appear in the sample, every single one of the $n$ draws must select one of the other $N-1$ remaining population units. The number of such ordered sequences is:
+   $$(N-1)^n$$
+
+3. **Non-Inclusion Probability:** Under equal likelihood, the probability that unit $i$ is excluded from the sample is:
+   $$P(I_i = 0) = \frac{(N-1)^n}{N^n} = \left(\frac{N-1}{N}\right)^n = \left(1 - \frac{1}{N}\right)^n$$
+
+4. **Inclusion Probability:** By the complement rule, the inclusion probability $\pi_i = P(I_i = 1)$ under SRSWR is:
+   $$P(I_i = 1) = 1 - P(I_i = 0) = 1 - \left(1 - \frac{1}{N}\right)^n \quad \text{for } i = 1, 2, \dots, N$$
+:::
+
+---
+
+### Draw-by-Draw Analysis and Complementary Product in SRSWR
+
+Let $X_{ik} = 1$ if unit $i$ is selected on draw $k$, and $0$ otherwise. Because each draw is conducted independently with replacement:
+
+$$P(X_{ik} = 1) = \frac{1}{N} \quad \text{and} \quad P(X_{ik} = 0) = 1 - \frac{1}{N} \quad \text{for all } k = 1, 2, \dots, n$$
+
+::: {.pde-box}
+**Derivation 2: Product Rule for Independent Complements**  
+Unit $i$ is excluded from the sample if and only if it fails to be drawn on draw 1, AND on draw 2, ..., AND on draw $n$:
+
+$$\{I_i = 0\} = \bigcap_{k=1}^n \{X_{ik} = 0\}$$
+
+Because the draws are independent in SRSWR, the joint probability factors into a product:
+
+$$P(I_i = 0) = P\left(\bigcap_{k=1}^n \{X_{ik} = 0\}\right) = \prod_{k=1}^n P(X_{ik} = 0) = \prod_{k=1}^n \left(1 - \frac{1}{N}\right) = \left(1 - \frac{1}{N}\right)^n$$
+
+Applying the complement rule gives:
+
+$$P(I_i = 1) = 1 - \left(1 - \frac{1}{N}\right)^n$$
+:::
+
+---
+
+## Comparison: SRSWOR vs. SRSWR Inclusion Probabilities
+
+Comparing the inclusion probabilities across the two designs:
+
+$$\pi_i^{\text{WOR}} = \frac{n}{N} \qquad \text{vs.} \qquad \pi_i^{\text{WR}} = 1 - \left(1 - \frac{1}{N}\right)^n$$
+
+For sample size $n = 1$, both probabilities are identical: $\pi_i^{\text{WOR}} = \pi_i^{\text{WR}} = \frac{1}{N}$. 
+
+For $n \ge 2$ and $N \ge 2$, we claim that $\pi_i^{\text{WR}} < \pi_i^{\text{WOR}}$. Proving this is equivalent to showing that:
+
+$$\left(1 - \frac{1}{N}\right)^n > 1 - \frac{n}{N}$$
+
+<details class="proof-box" open>
+<summary>Formal Proofs of the Strict Inequality</summary>
+<div class="proof-body">
+
+<p style="font-weight: 700; font-size: 1.05em; margin-top: 0.8em; color: #1e293b;">Method 1: Proof via Bernoulli's Inequality (Direct & Shortest)</p>
+
+**Bernoulli's Inequality:** For any real number $x > -1$ with $x \neq 0$ and any integer $n \ge 2$:
+
+$$(1 + x)^n > 1 + nx$$
+
+Setting $x = -\frac{1}{N}$:
+
+1. Since population size $N \ge 2$, we have $x = -\frac{1}{N} \in [-0.5, 0)$, which satisfies $x > -1$ and $x \neq 0$.
+2. Applying Bernoulli's Inequality yields:
+   $$\left(1 - \frac{1}{N}\right)^n > 1 + n\left(-\frac{1}{N}\right) = 1 - \frac{n}{N}$$
+3. Multiplying both sides by $-1$ (reversing the inequality direction) and adding $1$:
+   $$1 - \left(1 - \frac{1}{N}\right)^n < \frac{n}{N} \implies \pi_i^{\text{WR}} < \pi_i^{\text{WOR}} \quad \blacksquare$$
+
+<p style="border-top: 1px dashed #cbd5e1; margin: 1.5em 0;"></p>
+
+<p style="font-weight: 700; font-size: 1.05em; margin-top: 0.8em; color: #1e293b;">Method 2: Proof via Binomial Expansion Term-Pairing</p>
+
+To prove the inequality directly from the binomial expansion without ignoring alternating signs, expand $(1 - x)^n$ where $x = \frac{1}{N}$:
+
+$$\left(1 - x\right)^n = 1 - nx + \sum_{k=2}^n (-1)^k \binom{n}{k} x^k$$
+
+We need to show that the remainder series $R = \sum_{k=2}^n (-1)^k \binom{n}{k} x^k > 0$. Group adjacent terms into pairs $(T_k, T_{k+1})$ starting at $k=2$ for even $k$:
+
+$$T_k + T_{k+1} = \binom{n}{k} x^k - \binom{n}{k+1} x^{k+1} = \binom{n}{k} x^k \left( 1 - \frac{n-k}{k+1} x \right)$$
+
+Because $n \le N$ in valid sampling designs, $x = \frac{1}{N} \le \frac{1}{n}$. Thus:
+
+$$\frac{n-k}{k+1} x \le \frac{n-k}{(k+1)n} < 1 \implies \left( 1 - \frac{n-k}{k+1} x \right) > 0$$
+
+Since every even term $T_k$ is strictly greater in magnitude than its following odd term $T_{k+1}$, every paired sum is strictly positive. If $n$ is even, the final term $T_n = x^n > 0$ is also positive. Thus, the total sum of remaining terms is strictly positive ($R > 0$), establishing:
+
+$$\left(1 - \frac{1}{N}\right)^n = 1 - \frac{n}{N} + R > 1 - \frac{n}{N} \implies \pi_i^{\text{WR}} < \pi_i^{\text{WOR}} \quad \blacksquare$$
+
+<p style="border-top: 1px dashed #cbd5e1; margin: 1.5em 0;"></p>
+
+<p style="font-weight: 700; font-size: 1.05em; margin-top: 0.8em; color: #1e293b;">Method 3: Proof via Mathematical Induction on $n$</p>
+
+* **Base Case ($n = 2$):** 
+  $$\left(1 - \frac{1}{N}\right)^2 = 1 - \frac{2}{N} + \frac{1}{N^2} > 1 - \frac{2}{N} \quad \text{since } \frac{1}{N^2} > 0$$
+  The base case holds strictly.
+
+* **Inductive Hypothesis:** Assume $\left(1 - \frac{1}{N}\right)^k > 1 - \frac{k}{N}$ holds for some integer $k \ge 2$.
+
+* **Inductive Step ($k \to k+1$):** Multiply both sides by $\left(1 - \frac{1}{N}\right) > 0$:
+  $$\begin{aligned}
+  \left(1 - \frac{1}{N}\right)^{k+1} &> \left(1 - \frac{k}{N}\right)\left(1 - \frac{1}{N}\right) \\
+  &= 1 - \frac{k}{N} - \frac{1}{N} + \frac{k}{N^2} \\
+  &= 1 - \frac{k+1}{N} + \frac{k}{N^2}
+  \end{aligned}$$
+  Since $k \ge 2$ and $N \ge 2$, the term $\frac{k}{N^2} > 0$. Therefore:
+  $$\left(1 - \frac{1}{N}\right)^{k+1} > 1 - \frac{k+1}{N}$$
+  By induction, the inequality holds for all integers $n \ge 2$. $\blacksquare$
+
+</div>
+</details>
+
+<details class="proof-box">
+<summary>Optional Review: Elementary Proofs of Bernoulli's Inequality</summary>
+<div class="proof-body">
+
+<p style="font-weight: 700; font-size: 1.05em; margin-top: 0.8em; color: #1e293b;">Theorem: Bernoulli's Inequality</p>
+
+For any integer $n \ge 1$ and any real number $x \ge -1$:
+
+$$(1 + x)^n \ge 1 + nx$$
+
+Furthermore, if $n \ge 2$ and $x \neq 0$, the inequality is strict: $(1 + x)^n > 1 + nx$.
+
+<p style="border-top: 1px dashed #cbd5e1; margin: 1.5em 0;"></p>
+
+<p style="font-weight: 700; font-size: 1.05em; margin-top: 0.8em; color: #1e293b;">Proof 1: By Mathematical Induction (Most General)</p>
+
+* **Base Case ($n = 1$):**
+  $$(1 + x)^1 = 1 + 1 \cdot x = 1 + x$$
+  The inequality holds (as an equality). For $n = 2$ with $x \neq 0$:
+  $$(1 + x)^2 = 1 + 2x + x^2 > 1 + 2x \quad \text{since } x^2 > 0$$
+
+* **Inductive Hypothesis:** Assume $(1 + x)^k \ge 1 + kx$ holds for some integer $k \ge 1$.
+
+* **Inductive Step ($k \to k+1$):** Since $x \ge -1$, we know that $(1 + x) \ge 0$. Multiplying both sides of the hypothesis by $(1 + x)$ preserves the inequality:
+  $$\begin{aligned}
+  (1 + x)^{k+1} &\ge (1 + kx)(1 + x) \\
+  &= 1 + x + kx + kx^2 \\
+  &= 1 + (k + 1)x + \underbrace{kx^2}_{\ge 0} \\
+  &\ge 1 + (k + 1)x
+  \end{aligned}$$
+
+  Since $k \ge 1$ and $x^2 \ge 0$, dropping $kx^2$ yields $(1 + x)^{k+1} \ge 1 + (k+1)x$. If $x \neq 0$, $kx^2 > 0$, making the inequality strict. By induction, the statement holds for all $n \ge 1$. $\blacksquare$
+
+<p style="border-top: 1px dashed #cbd5e1; margin: 1.5em 0;"></p>
+
+<p style="font-weight: 700; font-size: 1.05em; margin-top: 0.8em; color: #1e293b;">Proof 2: By Calculus / Minimization (For $x > -1$)</p>
+
+Define the differentiable function $f(x) = (1 + x)^n - (1 + nx)$ on the domain $x \in (-1, \infty)$ for fixed $n \ge 2$.
+
+1. **Find Critical Points:** Take the first derivative with respect to $x$:
+   $$f'(x) = n(1 + x)^{n-1} - n = n \left[ (1 + x)^{n-1} - 1 \right]$$
+   Setting $f'(x) = 0$ yields $(1 + x)^{n-1} = 1 \implies x = 0$.
+
+2. **Determine Sign of Derivative:**
+   * For $-1 < x < 0$: $(1 + x) < 1 \implies (1 + x)^{n-1} < 1 \implies f'(x) < 0$ (function is strictly decreasing).
+   * For $x > 0$: $(1 + x) > 1 \implies (1 + x)^{n-1} > 1 \implies f'(x) > 0$ (function is strictly increasing).
+
+3. **Conclusion:** $x = 0$ is the unique global minimum of $f(x)$ on $(-1, \infty)$. Since $f(0) = (1+0)^n - (1 + 0) = 0$, we have $f(x) > f(0) = 0$ for all $x \neq 0$. Thus:
+   $$(1 + x)^n - (1 + nx) > 0 \implies (1 + x)^n > 1 + nx \quad \blacksquare$$
+
+<p style="border-top: 1px dashed #cbd5e1; margin: 1.5em 0;"></p>
+
+<p style="font-weight: 700; font-size: 1.05em; margin-top: 0.8em; color: #1e293b;">Proof 3: By Binomial Expansion (Direct for $x \ge 0$)</p>
+
+For $x \ge 0$ and integer $n \ge 2$, expand $(1 + x)^n$ directly using the Binomial Theorem:
+
+$$(1 + x)^n = \sum_{k=0}^n \binom{n}{k} x^k = 1 + nx + \binom{n}{2}x^2 + \binom{n}{3}x^3 + \dots + x^n$$
+
+Since $x \ge 0$, every term $\binom{n}{k} x^k \ge 0$ for $k \ge 2$. Truncating the expansion after the first two terms immediately gives:
+
+$$(1 + x)^n = 1 + nx + \underbrace{\sum_{k=2}^n \binom{n}{k} x^k}_{\ge 0} \ge 1 + nx$$
+
+If $x > 0$, the term $\binom{n}{2}x^2 > 0$, making the inequality strictly greater. $\blacksquare$
+
+</div>
+</details>
+
+::: {.pde-box}
+**Intuitive Summary:**  
+In SRSWR, duplicate draws of the same unit are allowed, which "wastes" sample slots on already-selected items. Consequently, the probability of including any given distinct unit $i$ in SRSWR is **strictly less** than in SRSWOR ($\pi_i^{\text{WR}} < \pi_i^{\text{WOR}}$ for $n > 1$). However, as $N \to \infty$, applying $(1 - 1/N)^n \approx 1 - n/N$ shows that both inclusion probabilities converge to $\frac{n}{N}$.
+:::
+
+# Summary and Outlook
+
+In this lecture, we covered:
+
+1. Feller's classical combinatorial framework for equally likely sample spaces.
+2. The sock/shoe matching problem and non-replacement pair probabilities.
+3. General multivariate hypergeometric probabilities for multi-category selections (poker and bridge hands).
+4. Derivation of first-order inclusion probabilities $\pi_i$ in SRSWOR ($\frac{n}{N}$) and SRSWR ($1 - (1 - \frac{1}{N})^n$) using direct combinatorics and draw-by-draw probability rules.
+5. The exact relationship between SRSWOR (Hypergeometric) and SRSWR (Binomial).
+6. Mathematical proof and numerical/graphical validation of the limit $\text{Hypergeometric}(N, M, n) \to \text{Binomial}(n, p)$ as $N \to \infty$.
+
+In **Lecture 3**, we will move into the concepts of **Expectations and Unbiasedness**, analyzing unbiased estimation of population quantities from the sample.
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Target all proof-box expandable details
+  document.querySelectorAll('details.proof-box').forEach(details => {
+    const summary = details.querySelector('summary');
+    const body = details.querySelector('.proof-body') || details;
+
+    // Create container and button
+    const container = document.createElement('div');
+    container.className = 'proof-close-container';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'proof-close-btn';
+    closeBtn.type = 'button';
+    closeBtn.innerHTML = '&#9650; Collapse Proof'; // Upward triangle symbol
+
+    // Handle smooth collapse without page jumping
+    closeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      // 1. Smoothly scroll the top summary header into view
+      summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // 2. Close the box after scrolling completes
+      setTimeout(() => {
+        details.open = false;
+      }, 150);
+    });
+
+    container.appendChild(closeBtn);
+    body.appendChild(container);
+  });
+});
+</script>

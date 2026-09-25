@@ -1,1 +1,15 @@
+# Quarto build outputs
+_site/
+.quarto/
+
+# Knitr / R Markdown temporary folders
+*_files/
+*_cache/
+
+# R session history and environment files
+.Rhistory
+.RData
+.Rproj.user
+
+
 /.quarto/

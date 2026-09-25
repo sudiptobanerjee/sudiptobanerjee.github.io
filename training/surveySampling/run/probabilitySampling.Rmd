@@ -1,0 +1,555 @@
+---
+title: "Probability Sampling in Finite Populations"
+author: "Sudipto Banerjee<br><em>Department of Biostatistics<br>Department of Statistics & Data Science<br>Institute of the Environment & Sustainability<br>UCLA</em>"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    toc_depth: 3
+    number_sections: true
+    theme: flatly
+    self_contained: true
+format:
+  html:
+    page-layout: full
+    fontsize: 14.5px
+    toc: true
+    toc-location: left
+    toc-expand: 1
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
+    code-copy: hover
+    embed-resources: true
+---
+
+<div style="display:none;">
+$$\newcommand{\T}{\mathrm{\scriptscriptstyle T}}$$
+</div>
+
+<style>
+.main-container {
+  margin-left: 280px !important;
+  max-width: 95% !important;
+}
+
+div.tocify {
+  width: 250px !important;
+}
+
+#quarto-document-content {
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+  max-width: 1500px !important;
+}
+
+li > p {
+  margin-bottom: 0px !important;
+}
+li > ul {
+  margin-top: 2px !important;
+}
+
+details.proof-box {
+  margin-top: 1em;
+  margin-bottom: 1.2em;
+  padding: 0.8em 1.2em;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
+#quarto-content details.proof-box {
+  margin-left: -2em;
+  margin-right: -2em;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+
+details.proof-box summary {
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  outline: none;
+}
+
+details.proof-box summary:hover {
+  color: #2563eb;
+}
+
+details.proof-box[open] summary {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5em;
+  margin-bottom: 0.8em;
+}
+
+.proof-body {
+  padding-top: 0.4em;
+  line-height: 1.6;
+}
+
+.pde-box {
+  background-color: #f0f9ff;
+  border-left: 4px solid #0284c7;
+  padding: 1em 1.2em;
+  margin: 1.2em 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.equation-box {
+  background-color: #f0fdf4;
+  border-left: 4px solid #16a34a;
+  padding: 1em 1.2em;
+  margin: 1.2em 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.equation-title {
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.4em;
+  font-size: 0.95em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.alg-container {
+  font-family: inherit;
+  border-top: 2.5px solid #0f172a;
+  border-bottom: 2.5px solid #0f172a;
+  padding: 14px 18px;
+  margin: 1.5em 0;
+  background-color: #f8fafc;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  overflow-x: auto;
+}
+
+.alg-header {
+  font-weight: 700;
+  font-size: 1.02em;
+  color: #0f172a;
+  border-bottom: 1.5px solid #0f172a;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  letter-spacing: 0.01em;
+}
+
+.alg-io {
+  font-size: 0.92em;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  line-height: 1.55;
+}
+
+.alg-body {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Fira Code", monospace;
+  font-size: 0.88em;
+  line-height: 1.65;
+  color: #0f172a;
+}
+
+.alg-kw {
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.alg-comment {
+  color: #059669;
+  font-style: italic;
+}
+
+.alg-line {
+  display: flex;
+  align-items: baseline;
+}
+
+.alg-num {
+  width: 32px;
+  color: #64748b;
+  user-select: none;
+  text-align: right;
+  padding-right: 12px;
+  font-size: 0.85em;
+}
+
+.alg-indent-1 { margin-left: 20px; }
+.alg-indent-2 { margin-left: 40px; }
+.alg-indent-3 { margin-left: 60px; }
+
+/* Bottom Collapse Button Styling */
+.proof-close-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.2em;
+  padding-top: 0.6em;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.proof-close-btn {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.85em;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.proof-close-btn:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE, 
+  message = FALSE,
+  fig.width = 9,
+  fig.height = 5.5,
+  fig.align = "center"
+)
+```
+
+# Mathematical Foundations: Finite Sample Spaces and Events
+
+Probability sampling in finite populations relies fundamentally on measure-theoretic probability restricted to finite sample spaces. Before defining complex survey designs or Bayesian population inference, we establish the core probability space $(\Omega, \mathcal{F}, P)$.
+
+## Finite Sample Spaces and Elementary Events
+
+Let $\Omega$ be a non-empty, finite set of all possible outcomes of a random experiment. We refer to $\Omega$ as the **sample space**.
+
+<div class="equation-box">
+<div class="equation-title">Definition 1.1: Finite Sample Space and Elementary Events</div>
+A sample space $\Omega$ is **finite** if it contains a finite number of elements $M = \vert{}\Omega\vert{} < \infty$, such that:
+$$\Omega = \{\omega_1, \omega_2, \dots, \omega_M\}$$
+Each individual outcome $\omega_m \in \Omega$ is called an **elementary outcome** (or outcome). The singleton sets $\{\omega_m\}$ are called **elementary events**.
+</div>
+
+In finite population sampling, the random experiment consists of selecting a subset of units from a finite target population $U$. The outcomes $\omega_m$ correspond to specific realized samples.
+
+## The Event Space $\mathcal{F}$
+
+An **event** $A$ is a subset of the sample space, $A \subseteq \Omega$. The collection of all observable events forms the **event space** (or $\sigma$-algebra) $\mathcal{F}$.
+
+<div class="pde-box">
+<strong>Key Structural Property:</strong> Because $\Omega$ is finite, the natural choice for the event space $\mathcal{F}$ is the complete power set of $\Omega$, denoted by $\mathcal{P}(\Omega)$. The power set consists of all $2^M$ possible subsets of $\Omega$:
+$$\mathcal{F} = \mathcal{P}(\Omega) = \{ A : A \subseteq \Omega \}, \quad \vert{}\mathcal{F}\vert{} = 2^{\vert{}\Omega\vert{}}$$
+</div>
+
+The algebraic operations on events directly parallel standard set operations:
+
+* **Union ($A \cup B$):** Event that $A$ or $B$ (or both) occur.
+* **Intersection ($A \cap B$):** Event that both $A$ and $B$ occur.
+* **Complement ($A^c$ or $\Omega \setminus A$):** Event that $A$ does not occur.
+* **Disjoint/Mutually Exclusive Events:** $A \cap B = \emptyset$.
+
+---
+
+# Axiomatic Definition of Probability
+
+A **probability measure** $P$ assigns a real number to every event in $\mathcal{F}$ according to Kolmogorov's Axioms.
+
+<div class="equation-box">
+<div class="equation-title">Definition 1.2: Axiomatic Probability Measure</div>
+Let $\Omega$ be a finite sample space and $\mathcal{F} = \mathcal{P}(\Omega)$ be its event space. A **probability measure** is a function $P: \mathcal{F} \to [0, 1]$ satisfying Kolmogorov's three axioms:
+<ol>
+  <li><strong>Non-negativity:</strong> $P(A) \ge 0$ for all $A \in \mathcal{F}$.</li>
+  <li><strong>Normalization:</strong> $P(\Omega) = 1$.</li>
+  <li><strong>Finite Additivity:</strong> For any collection of pairwise disjoint events $A_1, A_2, \dots, A_k \in \mathcal{F}$ (where $A_r \cap A_s = \emptyset$ for $r \neq s$):
+  $$P\left( \bigcup_{r=1}^k A_r \right) = \sum_{r=1}^k P(A_r)$$
+  </li>
+</ol>
+</div>
+
+## Probability Assigned via Elementary Outcomes
+
+Because $\Omega = \{\omega_1, \dots, \omega_M\}$ is finite, any event $A \in \mathcal{F}$ can be represented uniquely as the disjoint union of its constituent elementary events:
+$$A = \bigcup_{\omega_m \in A} \{\omega_m\}$$
+
+Applying Axiom 3 (Finite Additivity), the probability of any event $A$ is fully determined by the probabilities assigned to the elementary outcomes:
+
+$$P(A) = \sum_{\omega_m \in A} P(\{\omega_m\})$$
+
+Let $p_m = P(\{\omega_m\})$ denote the probability mass assigned to elementary event $\{\omega_m\}$. The probability measure $P$ is completely specified by the vector $\mathbf{p} = (p_1, \dots, p_M)^\T$ subject to:
+
+1. $p_m \ge 0 \quad \forall m \in \{1, \dots, M\}$
+2. $\sum_{m=1}^M p_m = 1$
+
+<details class="proof-box">
+<summary>Proof: Fundamental Consequences of Kolmogorov's Axioms</summary>
+<div class="proof-body">
+From Kolmogorov's Axioms, we derive several immediate properties for any $A, B \in \mathcal{F}$:
+
+1. **Empty Set Probability:** $P(\emptyset) = 0$.
+   $$\Omega = \Omega \cup \emptyset \implies P(\Omega) = P(\Omega) + P(\emptyset) \implies 1 = 1 + P(\emptyset) \implies P(\emptyset) = 0$$
+
+2. **Complement Rule:** $P(A^c) = 1 - P(A)$.
+   $$A \cup A^c = \Omega \text{ with } A \cap A^c = \emptyset \implies P(A) + P(A^c) = P(\Omega) = 1 \implies P(A^c) = 1 - P(A)$$
+
+3. **Inclusion-Exclusion Principle:** $P(A \cup B) = P(A) + P(B) - P(A \cap B)$.
+   Decompose $A \cup B$ into the disjoint union of $A$ and $B \setminus A$:
+   $$A \cup B = A \cup (B \setminus A)$$
+   
+   Applying Axiom 3 (Finite Additivity) gives:
+   $$P(A \cup B) = P(A) + P(B \setminus A)$$
+   
+   To find an expression for $P(B \setminus A)$, decompose $B$ into the disjoint union of $B \cap A$ and $B \setminus A$:
+   $$B = (B \cap A) \cup (B \setminus A)$$
+   
+   Applying Axiom 3 to $B$ yields:
+   $$P(B) = P(B \cap A) + P(B \setminus A)$$
+   
+   Rearranging terms gives:
+   $$P(B \setminus A) = P(B) - P(A \cap B)$$
+   
+   Substituting this expression for $P(B \setminus A)$ back into $P(A \cup B)$ completes the proof:
+   $$P(A \cup B) = P(A) + P(B) - P(A \cap B)$$
+</div>
+</details>
+
+---
+
+# Application to Finite Population Survey Sampling
+
+We now map this abstract probability framework directly onto finite population sampling.
+
+## Target Population and Sample Space of Samples
+
+Let $U = \{1, 2, \dots, N\}$ denote a fixed, finite **target population** of $N$ known, labeled units. 
+
+<div class="equation-box">
+<div class="equation-title">Definition 1.3: Sampling Design as a Probability Measure</div>
+A **sample** $s$ is a subset of the population, $s \subseteq U$. 
+Let $\mathcal{S} \subseteq \mathcal{P}(U)$ denote the set of all candidate samples allowed under a given protocol. The sample space of the sampling experiment is $\Omega = \mathcal{S}$.
+
+A **sampling design** $p(s)$ is a probability density function with respect to the counting measure on $\mathcal{S}$, defining a probability measure $P$ on $(\mathcal{S}, \mathcal{P}(\mathcal{S}))$:
+$$p(s) = P(S = s) = P(\{s\})$$
+satisfying:
+$$p(s) \ge 0 \quad \forall s \in \mathcal{S}, \quad \text{and} \quad \sum_{s \in \mathcal{S}} p(s) = 1$$
+</div>
+
+## Unit Inclusion as Events
+
+In design-based survey sampling, the randomness resides entirely in the selection mechanism $S \sim p(s)$, not in the population characteristics $\mathbf{y} = (y_1, \dots, y_N)^\T$.
+
+Let $A_i$ be the event that population unit $i \in U$ is selected into the random sample $S$:
+$$A_i = \{s \in \mathcal{S} : i \in s\}$$
+
+Using our axiomatic definition, the probability of event $A_i$ defines the **first-order inclusion probability** $\pi_i$:
+
+$$\pi_i = P(A_i) = P(i \in S) = \sum_{s \in \mathcal{S} : i \in s} p(s)$$
+
+Similarly, the event that both unit $i$ and unit $j$ are selected is $A_i \cap A_j = \{s \in \mathcal{S} : i, j \in s\}$, giving the **second-order inclusion probability** $\pi_{ij}$:
+
+$$\pi_{ij} = P(A_i \cap A_j) = P(i, j \in S) = \sum_{s \in \mathcal{S} : i, j \in s} p(s)$$
+
+<details class="proof-box">
+<summary>Proof: Sum of First-Order Inclusion Probabilities for Fixed-Size Designs</summary>
+<div class="proof-body">
+Let $S$ be a random sample under a fixed-size sampling design where $\vert{}s\vert{} = n$ for all $s \in \mathcal{S}$ with $p(s) > 0$. Consider the sum of first-order inclusion probabilities over all $N$ population units:
+
+$$\sum_{i=1}^N \pi_i = \sum_{i=1}^N \left( \sum_{s \in \mathcal{S} : i \in s} p(s) \right)$$
+
+To make the set-restricted summation explicit, we introduce an indicator function $\mathbb{I}(i \in s)$, which equals $1$ if unit $i$ is contained in sample $s$ and $0$ otherwise:
+
+$$\sum_{i=1}^N \pi_i = \sum_{i=1}^N \left( \sum_{s \in \mathcal{S}} p(s) \mathbb{I}(i \in s) \right)$$
+
+Because both index sets ($i \in \{1, \dots, N\}$ and $s \in \mathcal{S}$) are finite, we can interchange the order of summation—swapping the outer sum over units $i$ with the inner sum over candidate samples $s$:
+
+$$\sum_{i=1}^N \pi_i = \sum_{s \in \mathcal{S}} \left( \sum_{i=1}^N p(s) \mathbb{I}(i \in s) \right)$$
+
+Since $p(s)$ depends only on the sample $s$ and does not change with unit index $i$, we factor $p(s)$ out of the inner sum over $i$:
+
+$$\sum_{i=1}^N \pi_i = \sum_{s \in \mathcal{S}} p(s) \left( \sum_{i=1}^N \mathbb{I}(i \in s) \right)$$
+
+Notice that the inner sum $\sum_{i=1}^N \mathbb{I}(i \in s) = \sum_{i \in s} 1 = \vert{}s\vert{}$ counts the total number of units in sample $s$. Under a fixed-size sampling design, every sample with $p(s) > 0$ contains exactly $\vert{}s\vert{} = n$ units:
+
+$$\sum_{i=1}^N \pi_i = \sum_{s \in \mathcal{S}} p(s) \cdot n = n \sum_{s \in \mathcal{S}} p(s)$$
+
+Finally, since $p(s)$ is a normalized probability distribution over $\mathcal{S}$, we have $\sum_{s \in \mathcal{S}} p(s) = 1$:
+
+$$\sum_{i=1}^N \pi_i = n \cdot 1 = n$$
+</div>
+</details>
+
+---
+
+# Computational Implementations in R
+
+To translate our finite sample space definitions into practical computations, we consider a concrete baseline example: selecting a simple random sample without replacement (SRSWOR) of size $n = 3$ from a population $U = \{1, 2, 3, 4, 5\}$ of $N = 5$ units.
+
+The total number of candidate samples in our sample space $\mathcal{S}$ is:
+
+$$M = \vert{}\mathcal{S}\vert{} = \binom{N}{n} = \binom{5}{3} = 10$$
+
+Under SRSWOR, each candidate sample $s \in \mathcal{S}$ is assigned uniform design probability:
+
+$$p(s) = \frac{1}{M} = \frac{1}{10} = 0.1, \quad \forall s \in \mathcal{S}$$
+
+We now contrast two computational approaches for computing first-order inclusion probabilities $\boldsymbol{\pi} = (\pi_1, \dots, \pi_N)^\T$ and second-order inclusion probabilities $\boldsymbol{\Pi} = (\pi_{ij})_{N \times N}$.
+
+## Conceptual Loop-Based Approach
+
+The program below mirrors the theoretical definition of event summation directly. It sequentially evaluates set membership by explicitly checking, for each unit $i$ (and each pair $i, j$), which candidate samples in $\mathcal{S}$ contain that unit, and sums the corresponding design probabilities $p(s)$.
+
+**What this program demonstrates:**
+
+1. **Direct Translation of Set Summation:** It evaluates the exact finite-sum formulas $\pi_i = \sum_{s: i \in s} p(s)$ and $\pi_{ij} = \sum_{s: \{i,j\} \subseteq s} p(s)$ using nested loops and set containment functions (`i %in% s`).
+2. **Pedagogical Value:** It explicitly exposes how individual sample events are identified and aggregated, helping students visualize the mechanics of inclusion probabilities.
+3. **Computational Inefficiency:** It illustrates why scalar loops scale poorly in scientific R code. For an $N$-unit population and sample space of size $M$, computing $\boldsymbol{\Pi}$ requires $O(N^2 \cdot M)$ individual set evaluations.
+
+```{r loop-approach}
+# Target Population Parameters
+U <- 1:5
+N <- length(U)
+n <- 3
+
+# Enumerate sample space S (SRSWOR)
+S_list <- combn(U, n, simplify = FALSE)
+M <- length(S_list)
+p_s <- rep(1 / M, M)
+
+# 1. First-order inclusion probabilities (pi_i) via explicit looping
+pi_loop <- numeric(N)
+for (i in 1:N) {
+  event_A_i <- sapply(S_list, function(s) i %in% s)
+  pi_loop[i] <- sum(p_s[event_A_i])
+}
+
+# 2. Second-order inclusion probabilities (pi_ij) via double looping
+pi_matrix_loop <- matrix(0, nrow = N, ncol = N)
+for (i in 1:N) {
+  for (j in 1:N) {
+    if (i == j) {
+      pi_matrix_loop[i, j] <- pi_loop[i]
+    } else {
+      event_A_ij <- sapply(S_list, function(s) (i %in% s) && (j %in% s))
+      pi_matrix_loop[i, j] <- sum(p_s[event_A_ij])
+    }
+  }
+}
+
+cat("Loop-Based pi_i Vector:\n")
+print(pi_loop)
+```
+
+## Idiomatic R: Vectorized Matrix-Algebra Approach
+
+In modern statistical computing, design-based survey calculations are naturally formulated in terms of matrix operations. We encapsulate the entire sample space structure inside an $M \times N$ binary **sample indicator matrix** $\mathbf{Z}$, where entry $Z_{m, i}$ indicates whether unit $i$ is selected in sample $s_m$:
+
+$$Z_{m, i} = \mathbb{I}(i \in s_m) = \begin{cases} 1 & \text{if } i \in s_m \\ 0 & \text{if } i \notin s_m \end{cases}$$
+
+Using linear algebra, our theoretical quantities become direct matrix-vector products:
+
+1. **First-Order Inclusion Probabilities:** The $N \times 1$ vector $\boldsymbol{\pi} = (\pi_1, \dots, \pi_N)^\T$ is obtained by weighting the indicator columns of $\mathbf{Z}$ by the design probability vector $\mathbf{p} = (p(s_1), \dots, p(s_M))^\T$:
+   $$\boldsymbol{\pi} = \mathbf{Z}^\T \mathbf{p}$$
+   In R, this matrix product $X^\T Y$ is computed via `crossprod(Z, p_s)` without allocating explicit transposes in memory.
+
+2. **Second-Order Inclusion Probability Matrix:** The $N \times N$ matrix $\boldsymbol{\Pi} = (\pi_{ij})$ contains diagonal entries $\pi_{ii} = \pi_i$ and off-diagonal entries $\pi_{ij} = \sum_{m=1}^M Z_{m,i} Z_{m,j} p(s_m)$. In matrix notation:
+   $$\boldsymbol{\Pi} = \mathbf{Z}^\T \text{diag}(\mathbf{p}) \mathbf{Z}$$
+   In R, scaling the rows of $\mathbf{Z}$ by $\mathbf{p}$ is achieved via element-wise multiplication `p_s * Z` (due to column-major matrix storage), allowing us to compute $\boldsymbol{\Pi}$ via `crossprod(Z, p_s * Z)` in a single BLAS-optimized call.
+
+**What this program demonstrates:**
+
+1. **Full Vectorization:** It eliminates all explicit loops by operating directly on the matrix representation $\mathbf{Z}$ of the sample space.
+2. **BLAS Optimization:** It highlights best-practice numerical routines in R—specifically using `crossprod()` instead of `t()` to compute matrix transpositions inline, significantly reducing memory allocations and computing time.
+3. **Equivalence & Precision:** It confirms that the vectorized approach produces identical numerical results to the scalar loop implementation while scaling efficiently to large sample spaces.
+
+```{r vectorized-approach}
+# 1. Direct Matrix Construction (M x N) without explicit t() or loops
+Z <- matrix(
+  as.numeric(sapply(S_list, function(s) U %in% s)), 
+  nrow = M, 
+  ncol = N, 
+  byrow = TRUE
+)
+colnames(Z) <- paste0("Unit_", U)
+rownames(Z) <- paste0("Sample_", 1:M)
+
+cat("Sample Indicator Matrix Z (M x N):\n")
+print(Z)
+
+# 2. First-order inclusion probabilities: pi = Z^T %*% p via crossprod()
+pi_vec <- as.vector(crossprod(Z, p_s))
+names(pi_vec) <- paste0("Unit_", 1:N)
+
+# 3. Second-order inclusion matrix: Pi = Z^T %*% diag(p) %*% Z via crossprod()
+# Note: (p_s * Z) scales row m of Z by p_s[m] due to column-major matrix storage
+pi_matrix <- crossprod(Z, p_s * Z)
+colnames(pi_matrix) <- rownames(pi_matrix) <- paste0("Unit_", 1:N)
+
+cat("\nVectorized First-Order Inclusion Probabilities (pi_i):\n")
+print(pi_vec)
+
+cat("\nVectorized Second-Order Inclusion Probability Matrix (pi_ij):\n")
+print(round(pi_matrix, 4))
+
+# Verification of equivalence between loop and vectorized results
+identical_pi <- all.equal(pi_loop, pi_vec, check.attributes = FALSE)
+cat("\nAre loop and vectorized results identical?:", identical_pi, "\n")
+```
+
+---
+
+# Summary and Outlook
+
+In this lecture, we established:
+
+1. The formal mathematical structure of finite sample spaces $\Omega$ and event power sets $\mathcal{F} = \mathcal{P}(\Omega)$.
+2. Axiomatic probability measures $P$ and their fundamental set properties.
+3. The mapping from abstract events to sampling designs $p(s)$ and inclusion probabilities $\pi_i, \pi_{ij}$.
+4. High-performance numerical computing habits in R: avoiding loops, using `crossprod()` instead of `t()`, and solving linear equations directly rather than inverting matrices.
+
+In **Lecture 2**, we will focus on **Feller-Style Combinatorial Probability in Finite Sample Spaces**, working through extensive counting problems, urn models, and inclusion-exclusion applications before progressing to Horvitz-Thompson estimation theory.
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Target all proof-box expandable details
+  document.querySelectorAll('details.proof-box').forEach(details => {
+    const summary = details.querySelector('summary');
+    const body = details.querySelector('.proof-body') || details;
+
+    // Create container and button
+    const container = document.createElement('div');
+    container.className = 'proof-close-container';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'proof-close-btn';
+    closeBtn.type = 'button';
+    closeBtn.innerHTML = '&#9650; Collapse Proof'; // Upward triangle symbol
+
+    // Handle smooth collapse without page jumping
+    closeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      // 1. Smoothly scroll the top summary header into view
+      summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // 2. Close the box after scrolling completes
+      setTimeout(() => {
+        details.open = false;
+      }, 150);
+    });
+
+    container.appendChild(closeBtn);
+    body.appendChild(container);
+  });
+});
+</script>

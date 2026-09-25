@@ -1,0 +1,5 @@
+# Tells Quarto to freeze output so R code isn't re-executed on every site build
+freeze: auto
+
+# Prevents individual tutorial files from appearing in the main navigation menu
+navbar: false
